@@ -4,16 +4,42 @@ podManagementPolicy: Parallel
 
 mode: "beacon"
 
+customCommand:
+- sh
+- -ac
+- >
+  lighthouse -l beacon_node
+  --datadir=/data
+  --disable-upnp
+  --disable-enr-auto-update
+  --enr-address=$(POD_IP)
+  --enr-tcp-port=9000
+  --enr-udp-port=9000
+  --listen-address=0.0.0.0
+  --port=9000
+  --discovery-port=9000
+  --http
+  --http-address=0.0.0.0
+  --http-port=5052
+  --metrics
+  --metrics-address=0.0.0.0
+  --metrics-port=5054
+  --testnet-dir=/data/testnet_spec
+  --eth1
+  --eth1-endpoints=http://dshackle.ethereum-private.svc.cluster.local:8545/eth
+  --target-peers=500
+  --debug-level=trace
 extraArgs:
   - --testnet-dir=/data/testnet_spec
+  - --disable-discovery
   - --eth1
   - --eth1-endpoints=http://dshackle.ethereum-private.svc.cluster.local:8545/eth
   - --target-peers=500
-#  - --debug-level=trace
+  - --debug-level=trace
 
-#extraEnv:
-#  - name: RUST_LOG
-#    value: discv5=trace
+extraEnv:
+  - name: RUST_LOG
+    value: discv5=trace
 
 initContainers:
 - name: init-genesis

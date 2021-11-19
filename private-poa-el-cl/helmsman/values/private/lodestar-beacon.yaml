@@ -17,11 +17,11 @@ extraArgs:
   - --eth1.enabled
   - --eth1.providerUrls=http://dshackle.ethereum-private.svc.cluster.local:8545/eth
   - --eth1.depositContractDeployBlock=$(cat /data/testnet_spec/deploy_block.txt)
-#  - --logLevel=silly
+  - --logLevel=silly
 
-#extraEnv:
-#  - name: DEBUG
-#    value: discv5:service,discv5:sessionService
+extraEnv:
+  - name: DEBUG
+    value: discv5:service,discv5:sessionService
 
 initContainers:
 - name: init-genesis
