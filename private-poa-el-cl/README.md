@@ -59,6 +59,14 @@ helmsman -f shared-services.yaml --show-diff --apply
 helmsman -f ethereum-private.yaml --show-diff --apply
 ```
 
+The following is an example on how to destroy everything created by a given stack:
+
+```sh
+# Delete everything that was applied by the "ethereum-private.yaml" stack
+helmsman --no-banner -f ethereum-private.yaml --destroy
+# Delete any PVC that was created
+kubectl -n ethereum-private delete pvc --all
+```
 
 ## Cleanup
 
