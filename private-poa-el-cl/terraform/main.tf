@@ -21,7 +21,11 @@ variable "region" {
 
 variable "cluster_name" {
   type    = string
-  default = "ethereum-kubernetes"
+  default = "eth-k8s"
+}
+
+locals {
+  common_tags = [ var.cluster_name, "ethereum-kubernetes" ]
 }
 
 data "digitalocean_kubernetes_versions" "main" {
@@ -35,25 +39,21 @@ resource "digitalocean_vpc" "main" {
 }
 
 resource "digitalocean_kubernetes_cluster" "main" {
-  name    = var.cluster_name
-  region  = var.region
-  version = data.digitalocean_kubernetes_versions.main.latest_version
-
+  name     = var.cluster_name
+  region   = var.region
+  version  = data.digitalocean_kubernetes_versions.main.latest_version
   vpc_uuid = digitalocean_vpc.main.id
-
-  tags = ["ethereum-kubernetes"]
+  tags     = local.common_tags
 
   node_pool {
-    name       = "default"
+    name       = "${var.cluster_name}-default"
     size       = "s-4vcpu-8gb-amd" # list available options with `doctl compute size list`
     labels = {
       priority  = "high"
       service   = "default"
     }
-    auto_scale = true
-    min_nodes  = 2
-    max_nodes  = 2
-    tags       = ["ethereum-kubernetes"]
+    node_count = 2
+    tags       = concat(local.common_tags, ["default"])
   }
 
 }
@@ -61,12 +61,12 @@ resource "digitalocean_kubernetes_cluster" "main" {
 # Dedicated pool of nodes for ethereum clients
 resource "digitalocean_kubernetes_node_pool" "clients" {
   cluster_id = digitalocean_kubernetes_cluster.main.id
-  name       = "clients"
+  name       = "${var.cluster_name}-clients"
   size       = "s-4vcpu-8gb-amd" # $48/month
   auto_scale = true
   min_nodes  = 10
   max_nodes  = 10
-  tags       = ["ethereum-kubernetes", "ethereum-kubernetes-clients"]
+  tags       = concat(local.common_tags, ["clients"])
 
   labels = {
     dedicated  = "clients"
@@ -81,10 +81,10 @@ resource "digitalocean_kubernetes_node_pool" "clients" {
 # Dedicated pool of nodes for the beacon explorer
 resource "digitalocean_kubernetes_node_pool" "beaconexplorer" {
   cluster_id = digitalocean_kubernetes_cluster.main.id
-  name       = "beaconexplorer"
-  size       = "so1_5-2vcpu-16gb" # $125/month
+  name       = "${var.cluster_name}-beaconexplorer"
+  size       = "so1_5-2vcpu-16gb" # $155/month (450GB NVMe)
   node_count = 1
-  tags       = ["ethereum-kubernetes", "ethereum-kubernetes-beaconexplorer"]
+  tags       = concat(local.common_tags, ["beaconexplorer"])
 
   labels = {
     dedicated  = "beaconexplorer"
@@ -99,10 +99,10 @@ resource "digitalocean_kubernetes_node_pool" "beaconexplorer" {
 # Dedicated pool of nodes for the blockscout explorer
 resource "digitalocean_kubernetes_node_pool" "blockscout" {
   cluster_id = digitalocean_kubernetes_cluster.main.id
-  name       = "blockscout"
-  size       = "so1_5-2vcpu-16gb" # $125/month
+  name       = "${var.cluster_name}-blockscout"
+  size       = "so-2vcpu-16gb" # $125/month (300GB NVMe)
   node_count = 1
-  tags       = ["ethereum-kubernetes", "ethereum-kubernetes-blockscout"]
+  tags       = concat(local.common_tags, ["blockscout"])
 
   labels = {
     dedicated  = "blockscout"
@@ -117,10 +117,10 @@ resource "digitalocean_kubernetes_node_pool" "blockscout" {
 # Dedicated pool of nodes for prometheus
 resource "digitalocean_kubernetes_node_pool" "prometheus" {
   cluster_id = digitalocean_kubernetes_cluster.main.id
-  name       = "prometheus"
-  size       = "m3-4vcpu-32gb" # $195/month
+  name       = "${var.cluster_name}-prometheus"
+  size       = "m3-4vcpu-32gb" # $195/month (100GB SSD)
   node_count = 1
-  tags       = ["ethereum-kubernetes", "ethereum-kubernetes-prometheus"]
+  tags       = concat(local.common_tags, ["prometheus"])
 
   labels = {
     dedicated  = "prometheus"
