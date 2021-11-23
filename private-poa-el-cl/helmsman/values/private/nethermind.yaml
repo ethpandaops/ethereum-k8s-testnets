@@ -1,9 +1,9 @@
-replicas: 1
-
 image:
   repository: nethermind/nethermind
   tag: latest
   pullPolicy: IfNotPresent
+
+replicas: 1
 
 podManagementPolicy: Parallel
 

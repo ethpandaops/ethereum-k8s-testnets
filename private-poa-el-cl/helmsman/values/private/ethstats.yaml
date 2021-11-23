@@ -1,3 +1,8 @@
+image:
+  repository: puppeth/ethstats
+  tag: latest
+  pullPolicy: IfNotPresent
+
 secretEnv:
   WS_SECRET: "PrivateNetwork"
 

@@ -1,3 +1,8 @@
+image:
+  repository: ethereum/client-go
+  tag: latest
+  pullPolicy: IfNotPresent
+
 replicas: 1
 
 extraArgs:

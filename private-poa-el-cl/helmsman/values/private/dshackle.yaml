@@ -1,8 +1,9 @@
-replicas: 3
-
 image:
   repository: skylenet/dshackle
   tag: "0.11@sha256:bfbc5e3e1f350c4d874af606b4dbc99f0c3c39ad7981ab7b1e597c6249e0dac8"
+  pullPolicy: IfNotPresent
+
+replicas: 3
 
 extraEnvs:
   - name: configPath

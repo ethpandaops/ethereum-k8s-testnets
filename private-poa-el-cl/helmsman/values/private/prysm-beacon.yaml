@@ -1,3 +1,8 @@
+image:
+  repository: skylenet/prysm-beacon-debian
+  tag: latest
+  pullPolicy: IfNotPresent
+
 replicas: 6
 
 podManagementPolicy: Parallel

@@ -1,5 +1,7 @@
 image:
-  tag: latest@sha256:18b60cf47bdf682d53c724614423c143ef2c91a4befee6c62e59e571d22f14f0
+  repository: skylenet/ethereum-genesis-generator
+  tag: latest
+  pullPolicy: IfNotPresent
 
 config:
   el:

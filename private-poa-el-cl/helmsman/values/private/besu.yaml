@@ -1,3 +1,8 @@
+image:
+  repository: hyperledger/besu
+  tag: latest
+  pullPolicy: IfNotPresent
+
 replicas: 1
 
 podManagementPolicy: Parallel

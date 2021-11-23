@@ -1,3 +1,8 @@
+image:
+  repository: skylenet/blockscout
+  tag: v4.0.0-beta
+  pullPolicy: IfNotPresent
+
 config:
   MIX_ENV: prod
   COIN: ETH
