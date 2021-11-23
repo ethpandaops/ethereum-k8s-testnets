@@ -1,0 +1,94 @@
+image:
+  repository: sigp/lighthouse
+  tag: v1.5.2
+  pullPolicy: IfNotPresent
+
+replicas: 1
+
+p2pNodePort:
+  enabled: true
+  startAt: 31080
+
+podManagementPolicy: Parallel
+
+mode: "beacon"
+
+extraArgs:
+  - --testnet-dir=/data/testnet_spec
+  - --eth1
+  - --eth1-endpoints=http://dshackle.ethereum.svc.cluster.local:8545/eth
+  - --target-peers=500
+#  - --debug-level=trace
+
+#extraEnv:
+#  - name: RUST_LOG
+#    value: discv5=trace
+
+initContainers:
+- name: init-genesis
+  image: alpine:latest
+  imagePullPolicy: IfNotPresent
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+  command:
+    - sh
+    - -ace
+    - >
+      mkdir -p /data/testnet_spec;
+      if ! [ -f /data/testnet_spec/genesis.ssz ];
+      then
+        echo "waiting for genesis provider";
+        while ! wget -T 5 -c http://genesis-generator:8001/cl/; do sleep 10; done;
+        wget -O /data/testnet_spec/deposit_contract.txt http://genesis-generator:8001/cl/deposit_contract.txt;
+        wget -O /data/testnet_spec/deploy_block.txt http://genesis-generator:8001/cl/deploy_block.txt;
+        wget -O /data/testnet_spec/config.yaml http://genesis-generator:8001/cl/config.yaml;
+        wget -O /data/testnet_spec/genesis.ssz http://genesis-generator:8001/cl/genesis.ssz;
+        echo "genesis init done";
+      else
+        echo "genesis exists. skipping...";
+      fi
+  volumeMounts:
+    - name: storage
+      mountPath: "/data"
+
+extraContainers:
+  - name: enr-http
+    image: msoap/shell2http:1.13
+    imagePullPolicy: IfNotPresent
+    command:
+    - sh
+    - -ace
+    - >
+      while [ ! -f /data/beacon/network/enr.dat ]; do sleep 2; done;
+      /app/shell2http -port 8888 /enr "cat /data/beacon/network/enr.dat";
+    volumeMounts:
+      - name: storage
+        mountPath: "/data"
+        readOnly: true
+    ports:
+      - name: enr-http
+        containerPort: 8888
+        protocol: TCP
+
+persistence:
+  enabled: true
+  accessModes:
+  - ReadWriteOnce
+  size: 1Gi
+  storageClassName: do-block-storage
+
+#livenessProbe: null
+#
+#readinessProbe:
+#  tcpSocket: null
+#  httpGet:
+#    path: /enr
+#    port: 8888
+#  initialDelaySeconds: 5
+#  periodSeconds: 5
+
+resources: {}
+
+serviceMonitor:
+  enabled: true

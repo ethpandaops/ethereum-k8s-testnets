@@ -1,0 +1,194 @@
+context: ethereum
+
+helmRepos:
+  ethereum-helm-charts: https://skylenet.github.io/ethereum-helm-charts
+
+namespaces:
+  ethereum:
+    protected: false
+
+appsTemplates:
+  common: &common
+    namespace: ethereum
+    enabled: true
+  validators: &validators
+    set:
+      initContainers[0].env[0].value: "$CONSENSUS_GENESIS_MNEMONIC"
+apps:
+  # Genesis creator
+  genesis-generator:
+    <<: *common
+    chart: "ethereum-helm-charts/genesis-generator"
+    version: "0.1.0"
+    priority: -110
+    valuesFiles:
+      - values/ethereum/genesis-generator.yaml
+    setString:
+      secretEnv.EXECUTION_CHAIN_ID: "$EXECUTION_CHAIN_ID"
+    set:
+      secretEnv.EXECUTION_GENESIS_MNEMONIC: "$EXECUTION_GENESIS_MNEMONIC"
+      secretEnv.CONSENSUS_GENESIS_MNEMONIC: "$CONSENSUS_GENESIS_MNEMONIC"
+      secretEnv.EXECUTION_SIGNER_ADDR_0: "$EXECUTION_SIGNER_ADDR_0"
+      secretEnv.EXECUTION_SIGNER_ADDR_1: "$EXECUTION_SIGNER_ADDR_1"
+      secretEnv.EXECUTION_SIGNER_ADDR_2: "$EXECUTION_SIGNER_ADDR_2"
+  # Execution layer
+  ethstats:
+    <<: *common
+    chart: "ethereum-helm-charts/ethstats"
+    version: "0.1.0"
+    priority: -110
+    valuesFiles:
+      - values/ethereum/ethstats.yaml
+  geth-bootnode:
+    <<: *common
+    chart: "ethereum-helm-charts/geth"
+    version: "0.1.1"
+    priority: -100
+    valuesFiles:
+      - values/ethereum/geth-bootnode.yaml
+      - values/ethereum/tolerations/clients.yaml
+  geth-signer:
+    <<: *common
+    chart: "ethereum-helm-charts/geth"
+    version: "0.1.1"
+    priority: -90
+    valuesFiles:
+      - values/ethereum/geth-signer.yaml
+      - values/ethereum/tolerations/clients.yaml
+    setString:
+      initContainers[0].env[0].value: '$EXECUTION_SIGNER_KEY_0'
+      initContainers[0].env[1].value: '$EXECUTION_SIGNER_KEY_1'
+      initContainers[0].env[2].value: '$EXECUTION_SIGNER_KEY_2'
+  geth:
+    <<: *common
+    chart: "ethereum-helm-charts/geth"
+    version: "0.1.1"
+    valuesFiles:
+      - values/ethereum/geth.yaml
+      - values/ethereum/tolerations/clients.yaml
+  geth-archive:
+    <<: *common
+    chart: "ethereum-helm-charts/geth"
+    version: "0.1.1"
+    valuesFiles:
+      - values/ethereum/geth-archive.yaml
+      - values/ethereum/tolerations/clients.yaml
+  nethermind:
+    <<: *common
+    chart: "ethereum-helm-charts/nethermind"
+    version: "0.1.1"
+    valuesFiles:
+      - values/ethereum/nethermind.yaml
+      - values/ethereum/tolerations/clients.yaml
+  besu:
+    <<: *common
+    chart: "ethereum-helm-charts/besu"
+    version: "0.1.1"
+    valuesFiles:
+      - values/ethereum/besu.yaml
+      - values/ethereum/tolerations/clients.yaml
+  dshackle:
+    <<: *common
+    chart: "ethereum-helm-charts/dshackle"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/dshackle.yaml
+      - values/ethereum/tolerations/clients.yaml
+  # Consensus layer
+  lighthouse-bootnode:
+    <<: *common
+    chart: "ethereum-helm-charts/lighthouse"
+    version: "0.1.0"
+    priority: -80
+    valuesFiles:
+      - values/ethereum/lighthouse-bootnode.yaml
+      - values/ethereum/tolerations/clients.yaml
+  lighthouse-beacon:
+    <<: *common
+    chart: "ethereum-helm-charts/lighthouse"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/lighthouse-beacon.yaml
+      - values/ethereum/tolerations/clients.yaml
+  lighthouse-validator:
+    <<: *common
+    <<: *validators
+    chart: "ethereum-helm-charts/lighthouse"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/lighthouse-validator.yaml
+      - values/ethereum/tolerations/clients.yaml
+  prysm-beacon:
+    <<: *common
+    chart: "ethereum-helm-charts/prysm"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/prysm-beacon.yaml
+      - values/ethereum/tolerations/clients.yaml
+  prysm-validator:
+    <<: *common
+    <<: *validators
+    chart: "ethereum-helm-charts/prysm"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/prysm-validator.yaml
+      - values/ethereum/tolerations/clients.yaml
+  teku-beacon:
+    <<: *common
+    chart: "ethereum-helm-charts/teku"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/teku-beacon.yaml
+      - values/ethereum/tolerations/clients.yaml
+  teku-validator:
+    <<: *common
+    <<: *validators
+    chart: "ethereum-helm-charts/teku"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/teku-validator.yaml
+      - values/ethereum/tolerations/clients.yaml
+  lodestar-beacon:
+    <<: *common
+    chart: "ethereum-helm-charts/lodestar"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/lodestar-beacon.yaml
+      - values/ethereum/tolerations/clients.yaml
+  lodestar-validator:
+    <<: *common
+    <<: *validators
+    chart: "ethereum-helm-charts/lodestar"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/lodestar-validator.yaml
+      - values/ethereum/tolerations/clients.yaml
+  nimbus:
+    <<: *common
+    <<: *validators
+    chart: "ethereum-helm-charts/nimbus"
+    version: "0.1.1"
+    valuesFiles:
+      - values/ethereum/nimbus.yaml
+      - values/ethereum/tolerations/clients.yaml
+  # Tooling
+  beaconchain-explorer:
+    <<: *common
+    chart: "ethereum-helm-charts/beaconchain-explorer"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/beaconchain-explorer.yaml
+      - values/ethereum/tolerations/beaconexplorer.yaml
+  blockscout:
+    <<: *common
+    chart: "ethereum-helm-charts/blockscout"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/blockscout.yaml
+      - values/ethereum/tolerations/blockscout.yaml
+  eth2-fork-mon:
+    <<: *common
+    chart: "ethereum-helm-charts/eth2-fork-mon"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/eth2-fork-mon.yaml
