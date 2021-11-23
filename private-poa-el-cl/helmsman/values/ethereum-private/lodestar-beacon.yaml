@@ -1,24 +1,28 @@
+image:
+  repository: chainsafe/lodestar
+  tag: next@sha256:cf435e669efdcf69fbf1f69d687d490ccc7e1de791ce6daab876886f09658430
+  pullPolicy: IfNotPresent
+
 replicas: 6
 
 podManagementPolicy: Parallel
 
-mode: "beacon"
-
-image:
-  repository: skylenet/prysm-beacon-debian
-  tag: latest@sha256:3d4331d1707a4603da9d1a721d800307226baef657589fe4a58c11c8e5f08675
-  pullPolicy: IfNotPresent
+mode: beacon
 
 extraArgs:
-  - --genesis-state=/data/testnet_spec/genesis.ssz
-  - --chain-config-file=/data/testnet_spec/config.yaml
-  - --bootstrap-node="$(cat /data/testnet_spec/bootstrap_nodes.txt)"
-  - --http-web3provider=http://dshackle.ethereum-private.svc.cluster.local:8545/eth
-  - --chain-id=$(grep DEPOSIT_NETWORK_ID /data/testnet_spec/config.yaml | cut -d ' ' -f2)
-  - --contract-deployment-block=$(cat /data/testnet_spec/deploy_block.txt)
-  - --deposit-contract=$(cat /data/testnet_spec/deposit_contract.txt)
-  - --verbosity=info
-  - --enable-debug-rpc-endpoints
+  - --genesisStateFile=/data/testnet_spec/genesis.ssz
+  - --paramsFile=/data/testnet_spec/config.yaml
+  - --network.discv5.bootEnrs="$(cat /data/testnet_spec/bootstrap_nodes.txt)"
+  - --network.connectToDiscv5Bootnodes=true
+  - --eth1.enabled
+  - --eth1.providerUrls=http://dshackle.ethereum-private.svc.cluster.local:8545/eth
+  - --eth1.depositContractDeployBlock=$(cat /data/testnet_spec/deploy_block.txt)
+#  - --logLevel=silly
+
+#extraEnv:
+#  - name: DEBUG
+#    value: discv5:service,discv5:sessionService
+
 initContainers:
 - name: init-genesis
   image: alpine:latest

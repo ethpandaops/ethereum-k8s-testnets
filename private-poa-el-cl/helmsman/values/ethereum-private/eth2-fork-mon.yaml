@@ -1,3 +1,8 @@
+image:
+  repository: ralexstokes/eth2-fork-mon
+  tag: latest
+  pullPolicy: IfNotPresent
+
 config:
   # ENV vars will be replaced using the 'init-config' init container
   endpoints:

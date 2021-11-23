@@ -1,4 +1,0 @@
-secretEnv:
-  WS_SECRET: "PrivateNetwork"
-
-resources: {}

@@ -1,28 +1,21 @@
-replicas: 6
-
-podManagementPolicy: Parallel
-
-mode: beacon
-
 image:
-  repository: chainsafe/lodestar
-  tag: next@sha256:cf435e669efdcf69fbf1f69d687d490ccc7e1de791ce6daab876886f09658430
+  repository: consensys/teku
+  tag: latest
   pullPolicy: IfNotPresent
 
+replicas: 1
+podManagementPolicy: Parallel
+
+mode: "beacon"
+
 extraArgs:
-  - --genesisStateFile=/data/testnet_spec/genesis.ssz
-  - --paramsFile=/data/testnet_spec/config.yaml
-  - --network.discv5.bootEnrs="$(cat /data/testnet_spec/bootstrap_nodes.txt)"
-  - --network.connectToDiscv5Bootnodes=true
-  - --eth1.enabled
-  - --eth1.providerUrls=http://dshackle.ethereum-private.svc.cluster.local:8545/eth
-  - --eth1.depositContractDeployBlock=$(cat /data/testnet_spec/deploy_block.txt)
-#  - --logLevel=silly
-
-#extraEnv:
-#  - name: DEBUG
-#    value: discv5:service,discv5:sessionService
-
+  - --initial-state=/data/testnet_spec/genesis.ssz
+  - --network=/data/testnet_spec/config.yaml
+  - --p2p-discovery-enabled
+  - --p2p-discovery-bootnodes="$(cat /data/testnet_spec/bootstrap_nodes.txt)"
+  - --eth1-endpoint=http://dshackle.ethereum-private.svc.cluster.local:8545/eth
+  - --eth1-deposit-contract-address=$(cat /data/testnet_spec/deposit_contract.txt)
+  - --logging=INFO
 initContainers:
 - name: init-genesis
   image: alpine:latest

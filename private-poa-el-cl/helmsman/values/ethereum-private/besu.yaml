@@ -1,16 +1,22 @@
-replicas: 5
+image:
+  repository: hyperledger/besu
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicas: 1
 
 podManagementPolicy: Parallel
 
 extraArgs:
-- --bootnodes="$(cat /data/bootnode.txt)"
-- --networkid=$(cat /data/chainid.txt)
+- --genesis-file=/data/genesis.json
+- --bootnodes="$(cat /data/bootnodes.txt)"
+- --network-id=$(cat /data/chainid.txt)
 - --ethstats=$(hostname):PrivateNetwork@ethstats:3000
-- --verbosity=4
+#- --logging=TRACE
 
 initContainers:
 - name: init-genesis
-  image: ethereum/client-go:latest
+  image: alpine:latest
   imagePullPolicy: IfNotPresent
   securityContext:
     runAsNonRoot: false
@@ -26,21 +32,23 @@ initContainers:
         wget -O /data/genesis.json http://genesis-generator:8000/el/geth.json;
         apk update && apk add jq;
         cat /data/genesis.json | jq -r '.config.chainId' > /data/chainid.txt;
-        geth init --datadir /data /data/genesis.json;
         touch /data/genesis_init_done;
         echo "genesis init done";
       else
         echo "genesis is already initialized";
       fi;
-      echo "waiting for bootnode to be available";
-      while ! wget -O /data/bootnode.txt http://geth-bootnode-0.geth-bootnode-headless.ethereum-private.svc.cluster.local:8888/enode;
+      while ! wget -O /data/bootnodes.txt http://geth-bootnode-0.geth-bootnode-headless.ethereum-private.svc.cluster.local:8888/enode;
       do
         sleep 10;
       done;
-      echo "bootnode init done: $(cat /data/bootnode.txt)";
+      echo "bootnode init done: $(cat /data/bootnodes.txt)";
   volumeMounts:
     - name: storage
       mountPath: "/data"
+
+extraEnv:
+- name: JAVA_OPTS
+  value: "-Xmx1000m -Xms1000m"
 
 #persistence:
 #  enabled: true
