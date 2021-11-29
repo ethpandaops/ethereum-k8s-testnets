@@ -278,3 +278,12 @@ apps:
     version: "0.1.0"
     valuesFiles:
       - values/ethereum/eth2-fork-mon.yaml
+  #
+  # Ingress
+  #
+  ingress-definitions:
+    <<: *common
+    chart: "local-charts/ingress-definitions"
+    version: "0.0.1"
+    set:
+      domain: "$DO_DNS_DOMAIN"
