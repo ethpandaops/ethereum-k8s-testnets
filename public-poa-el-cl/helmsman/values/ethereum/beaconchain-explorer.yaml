@@ -16,7 +16,7 @@ config:
       port: "5052"
       type: "lighthouse"
       pageSize: 500
-    eth1Endpoint: http://dshackle.ethereum.svc.cluster.local:8545/eth
+    eth1Endpoint: http://dshackle:8545/eth
     eth1DepositContractAddress: $DEPOSIT_CONTRACT_ADDRESS
     eth1DepositContractFirstBlock: $ETH1_DEPOSIT_CONTRACT_BLOCK
 

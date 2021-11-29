@@ -93,9 +93,9 @@ initContainers:
         connection:
           ethereum:
             rpc:
-              url: http://geth-$i.geth-headless.ethereum.svc.cluster.local:8545
+              url: http://geth-$i-0:8545
             ws:
-              url: ws://geth-$i.geth-headless.ethereum.svc.cluster.local:8546
+              url: ws://geth-$i-0:8546
       " >> /config-update/upstreams.yaml;
     done;
     echo "generated upstreams.yaml:";

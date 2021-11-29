@@ -3,11 +3,10 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
-replicas: 5
+replicas: 1
 
 p2pNodePort:
   enabled: true
-  startAt: 30140
 
 podManagementPolicy: Parallel
 
@@ -15,7 +14,7 @@ extraArgs:
 - --bootnodes="$(cat /data/bootnode.txt)"
 - --networkid=$(cat /data/chainid.txt)
 - --ethstats=$(hostname):PrivateNetwork@ethstats:3000
-- --verbosity=4
+- --verbosity=5
 
 initContainers:
 - name: init-genesis
@@ -42,7 +41,7 @@ initContainers:
         echo "genesis is already initialized";
       fi;
       echo "waiting for bootnode to be available";
-      while ! wget -O /data/bootnode.txt http://geth-bootnode-0.geth-bootnode-headless.ethereum.svc.cluster.local:8888/enode;
+      while ! wget -O /data/bootnode.txt http://geth-bootnode-0:8888/enode;
       do
         sleep 10;
       done;

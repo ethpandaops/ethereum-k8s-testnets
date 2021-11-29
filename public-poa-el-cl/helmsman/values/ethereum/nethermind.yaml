@@ -7,7 +7,6 @@ replicas: 1
 
 p2pNodePort:
   enabled: true
-  startAt: 30300
 
 podManagementPolicy: Parallel
 
@@ -46,7 +45,7 @@ initContainers:
         echo "chainspec is already there";
       fi;
       echo "waiting for bootnode to be available";
-      while ! wget -O /data/bootnodes.txt http://geth-bootnode-0.geth-bootnode-headless.ethereum.svc.cluster.local:8888/enode;
+      while ! wget -O /data/bootnodes.txt http://geth-bootnode-0:8888/enode;
       do
         sleep 10;
       done;

@@ -7,7 +7,6 @@ replicas: 1
 
 p2pNodePort:
   enabled: true
-  startAt: 30400
 
 podManagementPolicy: Parallel
 
@@ -41,7 +40,7 @@ initContainers:
       else
         echo "genesis is already initialized";
       fi;
-      while ! wget -O /data/bootnodes.txt http://geth-bootnode-0.geth-bootnode-headless.ethereum.svc.cluster.local:8888/enode;
+      while ! wget -O /data/bootnodes.txt http://geth-bootnode-0:8888/enode;
       do
         sleep 10;
       done;

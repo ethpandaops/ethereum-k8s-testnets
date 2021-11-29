@@ -7,15 +7,19 @@ replicas: 1
 
 p2pNodePort:
   enabled: true
-  startAt: 30100
 
 extraArgs:
 - --bootnodes=""
 - --networkid=$(cat /data/chainid.txt)
 - --ethstats=$(hostname):PrivateNetwork@ethstats:3000
 - --maxpeers 500
-- --nodekeyhex 97f3834f120545527fe7732d4e1ecfca9eab1c77762b86e57f1b56dc03c29b2a
-- --verbosity=4
+- --verbosity=5
+
+extraPorts:
+  - port: 8888
+    targetPort: enode-http
+    protocol: TCP
+    name: enode-http
 
 initContainers:
 - name: init-genesis

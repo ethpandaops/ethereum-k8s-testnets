@@ -3,11 +3,10 @@ image:
   tag: amd64-latest
   pullPolicy: IfNotPresent
 
-replicas: 6
+replicas: 1
 
 p2pNodePort:
   enabled: true
-  startAt: 31300
 
 podManagementPolicy: Parallel
 
@@ -20,6 +19,7 @@ extraArgs:
   - --secrets-dir=/data/validator/secrets/
   - --graffiti=$(hostname | cut -c -32)
   - --doppelganger-detection=false
+  - --log-level=TRACE;TRACE:discv5,libp2p;REQUIRED:none;DISABLED:none
 initContainers:
 # Important: Keep the init-keys container as the first element of the list
 #            due to the usage of -set initContainers[0].env[0].value=...
@@ -38,12 +38,10 @@ initContainers:
         echo "keys already exist. skipping...";
         exit 0;
       fi;
-      INDEX=$(echo $(hostname)| rev | cut -d'-' -f 1 | rev);
-      RANGE="NODE_${INDEX}_KEY_RANGE";
-      S_MIN=$(echo ${!RANGE} | cut -d ':' -f1 );
-      S_MAX=$(echo ${!RANGE} | cut -d ':' -f2 );
+      S_MIN=$(echo ${NODE_KEY_RANGE} | cut -d ':' -f1 );
+      S_MAX=$(echo ${NODE_KEY_RANGE} | cut -d ':' -f2 );
       mkdir -p /data/validator/keys /data/validator/secrets;
-      echo "generating keys for node $INDEX. range $S_MIN to $S_MAX";
+      echo "generating keys for node. range $S_MIN to $S_MAX";
       eth2-val-tools keystores --source-mnemonic="$MNEMONIC" --source-min=$S_MIN --source-max=$S_MAX --prysm-pass Pass123word --insecure --out-loc assigned_data;
       mv assigned_data/nimbus-keys/* /data/validator/keys/;
       mv assigned_data/secrets/* /data/validator/secrets/;
@@ -57,18 +55,10 @@ initContainers:
     #            due to the usage of -set initContainers[0].env[0].value=...
     - name: MNEMONIC
       value: ""
-    - name: NODE_0_KEY_RANGE
-      value: "72000:76000"
-    - name: NODE_1_KEY_RANGE
-      value: "76000:80000"
-    - name: NODE_2_KEY_RANGE
-      value: "80000:84000"
-    - name: NODE_3_KEY_RANGE
-      value: "84000:88000"
-    - name: NODE_4_KEY_RANGE
-      value: "88000:92000"
-    - name: NODE_5_KEY_RANGE
-      value: "92000:96000"
+    # Important: Keep "NODE_KEY_RANGE" as the second env var.
+    #            due to the usage of -set initContainers[0].env[1].value=...
+    - name: NODE_KEY_RANGE
+      value: ""
 
 - name: init-genesis
   image: alpine:latest

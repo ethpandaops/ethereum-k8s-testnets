@@ -3,11 +3,10 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
-replicas: 3
+replicas: 1
 
 p2pNodePort:
   enabled: true
-  startAt: 30120
 
 podManagementPolicy: Parallel
 
@@ -19,7 +18,7 @@ extraArgs:
 - --password=/data/keystore/signer.password
 - --allow-insecure-unlock
 - --mine
-- --verbosity=4
+- --verbosity=5
 
 initContainers:
 # Important: Keep the init-keystore container as the first element of the list
@@ -35,19 +34,14 @@ initContainers:
     - -ac
     - >
       mkdir -p /data/keystore;
-      export INDEX=$(echo $(hostname)| rev | cut -d'-' -f 1 | rev);
-      echo "Adding key for node $INDEX";
+      echo "Adding key for node";
       echo '' > /data/keystore/signer.password;
-      key="SIGNER_KEY_$INDEX";
+      key="SIGNER_KEY";
       echo ${!key} > /data/keystore/signer.json
   env:
-    # Important: Keep the "SIGNER_KEY_X" as the first env vars.
+    # Important: Keep the "SIGNER_KEY" as the first env var.
     #            due to the usage of -set initContainers[0].env[0].value=...
-    - name: SIGNER_KEY_0
-      value: ""
-    - name: SIGNER_KEY_1
-      value: ""
-    - name: SIGNER_KEY_2
+    - name: SIGNER_KEY
       value: ""
   volumeMounts:
     - name: storage
@@ -77,7 +71,7 @@ initContainers:
         echo "genesis is already initialized";
       fi;
       echo "waiting for bootnode to be available";
-      while ! wget -O /data/bootnode.txt http://geth-bootnode-0.geth-bootnode-headless.ethereum.svc.cluster.local:8888/enode;
+      while ! wget -O /data/bootnode.txt http://geth-bootnode-0:8888/enode;
       do
         sleep 10;
       done;
