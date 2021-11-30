@@ -1,0 +1,23 @@
+image:
+  #repository: parithoshj/testnet-faucet
+  #tag: 9859e0d
+  repository: skylenet/testnet-faucet
+  tag: latest@sha256:88ccf0c23817941802ca05831d4069281d0f50a3fe58ac8e8e280874ce175c2d
+  pullPolicy: IfNotPresent
+
+config:
+  webui:
+    title: "Testnet faucet"
+    buttonText: "Request 50 Testnet ETH"
+    logoUrl: "https://launchpad.ethereum.org/static/media/eth2-leslie-rhino.243747b9.png"
+    footer: "Forked from <b>Slock.it</b> by Pari - Send feedback to https://github.com/parithosh/testnet-faucet"
+    recaptchaKey: "6LfbgmsdAAAAALLKaIb2tFlAGrNl5DhUhytXi-u6"
+  server:
+    environment: live
+    debug: true
+    Ethereum:
+      milliEtherToTransfer: 50000
+      gasLimit: "30000"
+      live:
+        rpc: "http://dshackle:8545/eth"
+        account: "0x6859fb9121dFbD4F3B3448c1BE334fbB3c56e3a1"

@@ -272,6 +272,17 @@ apps:
     valuesFiles:
       - values/ethereum/blockscout.yaml
       - values/ethereum/tolerations/blockscout.yaml
+  testnet-faucet:
+    <<: *common
+    chart: "ethereum-helm-charts/testnet-faucet"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/testnet-faucet.yaml
+    setString:
+      config.server.Captcha.secret: "$FAUCET_CAPTCHA_SECRET"
+      config.server.Ethereum.live.privateKey: "$FAUCET_PRIVATE_KEY"
+    set:
+      config.server.Ethereum.chainId: $EXECUTION_CHAIN_ID
   eth2-fork-mon:
     <<: *common
     chart: "ethereum-helm-charts/eth2-fork-mon"
