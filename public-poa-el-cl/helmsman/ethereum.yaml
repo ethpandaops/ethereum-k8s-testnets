@@ -283,6 +283,19 @@ apps:
       config.server.Ethereum.live.privateKey: "$FAUCET_PRIVATE_KEY"
     set:
       config.server.Ethereum.chainId: $EXECUTION_CHAIN_ID
+  testnet-homepage:
+    <<: *common
+    chart: "ethereum-helm-charts/testnet-homepage"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/testnet-homepage.yaml
+    setString:
+      config.params.ethereum.chainId: "$EXECUTION_CHAIN_ID"
+      config.params.ethereum.ethstatsUrl: "https://ethstats.${DO_DNS_DOMAIN}"
+      config.params.ethereum.faucetUrl: "https://faucet.${DO_DNS_DOMAIN}"
+      config.params.ethereum.rpcUrl: "https://rpc.${DO_DNS_DOMAIN}"
+      config.params.ethereum.explorerUrl: "https://explorer.${DO_DNS_DOMAIN}"
+      config.params.ethereum.beaconexplorerUrl: "https://beaconchain.${DO_DNS_DOMAIN}"
   eth2-fork-mon:
     <<: *common
     chart: "ethereum-helm-charts/eth2-fork-mon"
