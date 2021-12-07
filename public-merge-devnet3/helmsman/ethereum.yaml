@@ -25,6 +25,13 @@ appsTemplates:
     valuesFiles:
       - values/ethereum/geth.yaml
       - values/ethereum/tolerations/clients.yaml
+  nethermind: &nethermind
+    chart: "ethereum-helm-charts/nethermind"
+    version: "0.2.0"
+    group: nethermind
+    valuesFiles:
+      - values/ethereum/nethermind.yaml
+      - values/ethereum/tolerations/clients.yaml
   lighthouse: &lighthouse
     chart: "ethereum-helm-charts/lighthouse"
     version: "0.1.0"
@@ -71,6 +78,21 @@ apps:
       replicas: 5
       p2pNodePort.startAt: 31140
       extraEnv[0].value: "geth-lighthouse"
+
+  #
+  # Lighthouse/Nethermind
+  #
+  nethermind-lighthouse-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30200}}
+  nethermind-lighthouse-1: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30201}}
+  nethermind-lighthouse-2: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30202}}
+  nethermind-lighthouse-3: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30203}}
+  lighthouse-nethermind:
+    <<: *common
+    <<: *lighthouse
+    set:
+      replicas: 4
+      p2pNodePort.startAt: 31200
+      extraEnv[0].value: "nethermind-lighthouse"
 
   #
   # Tooling
