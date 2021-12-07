@@ -39,6 +39,13 @@ appsTemplates:
     valuesFiles:
       - values/ethereum/lighthouse-beacon.yaml
       - values/ethereum/tolerations/clients.yaml
+  lodestar: &lodestar
+    chart: "ethereum-helm-charts/lodestar"
+    version: "0.1.0"
+    group: lodestar
+    valuesFiles:
+      - values/ethereum/lodestar-beacon.yaml
+      - values/ethereum/tolerations/clients.yaml
 
 apps:
 
@@ -93,6 +100,35 @@ apps:
       replicas: 4
       p2pNodePort.startAt: 31200
       extraEnv[0].value: "nethermind-lighthouse"
+
+  #
+  # Lodestar/Geth
+  #
+  geth-lodestar-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30240}}
+  geth-lodestar-1: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30241}}
+  geth-lodestar-2: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30242}}
+  geth-lodestar-3: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30243}}
+  geth-lodestar-4: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30244}}
+  lodestar-geth:
+    <<: *common
+    <<: *lodestar
+    set:
+      replicas: 5
+      p2pNodePort.startAt: 31240
+      extraEnv[0].value: "geth-lodestar"
+
+  #
+  # Lodestar/Nethermind
+  #
+  nethermind-lodestar-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30280}}
+  lodestar-nethermind:
+    <<: *common
+    <<: *lodestar
+    set:
+      replicas: 1
+      p2pNodePort.startAt: 31280
+      extraEnv[0].value: "nethermind-lodestar"
+
 
   #
   # Tooling

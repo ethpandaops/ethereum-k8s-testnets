@@ -14,6 +14,7 @@ extraArgs:
 - --Discovery.Bootnodes="$(cat /data/bootnode.txt)"
 - --config=kintsugi_devnet
 - --Init.ChainSpecPath=/data/chainspec.json
+- --Init.IsMining=false
 - --EthStats.Enabled=true
 - --EthStats.Name=$(hostname)
 - --EthStats.Secret=PrivateNetwork
@@ -21,7 +22,7 @@ extraArgs:
 - --JsonRpc.EnabledModules="net,eth,consensus,engine,subscribe,web3"
 - --Mining.Enabled=false
 - --Merge.Enabled=true
-- --Merge.TerminalTotalDifficulty=1000000000
+- --Merge.TerminalTotalDifficulty=5000000000
 - --Init.DiagnosticMode="None"
 #- --log=TRACE
 
