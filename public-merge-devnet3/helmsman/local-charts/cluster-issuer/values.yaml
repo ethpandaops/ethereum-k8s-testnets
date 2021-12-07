@@ -1,0 +1,10 @@
+acme:
+  server: "https://acme-v02.api.letsencrypt.org/directory"
+  email: ""
+
+secrets:
+  digitalocean_access_token: ""
+
+defaultCert:
+  domain: "testnet.wenmerge.dev"
+  secretName: default-cert

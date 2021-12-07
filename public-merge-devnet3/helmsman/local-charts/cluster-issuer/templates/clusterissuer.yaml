@@ -1,0 +1,20 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: {{ include "cluster-issuer.fullname" . }}
+spec:
+  acme:
+    # The ACME server URL
+    server: {{ .Values.acme.server }}
+    # Email address used for ACME registration
+    email: {{ .Values.acme.email }}
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: {{ include "cluster-issuer.fullname" . }}-acme-privkey
+    # Enable the DNS-01 challenge provider
+    solvers:
+    - dns01:
+        digitalocean:
+          tokenSecretRef:
+            name: {{ include "cluster-issuer.fullname" . }}
+            key: access-token
