@@ -1,6 +1,6 @@
-# Public Merge Devnet 3
+# Public Merge Devnet 3 (Tooling)
 
-Creating the infrastructure for [https://devnet3.themerge.dev/](https://devnet3.themerge.dev/)
+Creating the tooling infrastructure for [https://devnet3.themerge.dev/](https://devnet3.themerge.dev/)
 
 ## Creating your Kubernetes cluster
 
