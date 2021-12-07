@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-beaconchain
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/preserve-trailing-slash: "true"
+spec:
+  tls:
+  - hosts:
+    - "beaconchain.{{ .Values.domain }}"
+  rules:
+  - host: "beaconchain.{{ .Values.domain }}"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: beaconchain-explorer
+            port:
+              number: 3333

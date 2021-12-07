@@ -1,0 +1,33 @@
+image:
+  repository: skylenet/ethereum-testnet-homepage
+  tag: latest@sha256:d378257fb245bfb3ec17cd124145a2ada5ef62d734a26cfb6744f988dcadd80f
+  pullPolicy: IfNotPresent
+
+customMarkdown: |-
+  ## How to join
+
+  Read the [documentation](https://hackmd.io/dFzKxB3ISWO8juUqPpJFfw) for more instructions on how to join the testnet.
+
+  ## General information
+
+  TTD: `5000000000`
+
+  ## Genesis configuration
+
+  ### Execution layer clients
+
+  ```sh
+  https://config.devnet3.themerge.dev/el/bootnodes
+  https://config.devnet3.themerge.dev/el/genesis/geth.json
+  https://config.devnet3.themerge.dev/el/genesis/chainspec.json
+  ```
+
+  ### Consensus layer clients
+
+  ```
+  https://config.devnet3.themerge.dev/cl/bootnodes
+  https://config.devnet3.themerge.dev/cl/genesis/config.yaml
+  https://config.devnet3.themerge.dev/cl/genesis/genesis.ssz
+  https://config.devnet3.themerge.dev/cl/genesis/deploy_block.txt
+  https://config.devnet3.themerge.dev/cl/genesis/deposit_contract.txt
+  ```
