@@ -1,6 +1,6 @@
 image:
   repository: nethermindeth/nethermind
-  tag: kintsugi_v3
+  tag: kintsugi_v3_0.1
   pullPolicy: IfNotPresent
 
 replicas: 1

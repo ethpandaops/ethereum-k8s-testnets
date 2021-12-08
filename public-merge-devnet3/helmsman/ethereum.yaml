@@ -121,14 +121,17 @@ apps:
   # Lodestar/Nethermind
   #
   nethermind-lodestar-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30280}}
+  nethermind-lodestar-1: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30281}}
+  nethermind-lodestar-2: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30282}}
+  nethermind-lodestar-3: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30283}}
+  nethermind-lodestar-4: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30284}}
   lodestar-nethermind:
     <<: *common
     <<: *lodestar
     set:
-      replicas: 1
+      replicas: 5
       p2pNodePort.startAt: 31280
       extraEnv[0].value: "nethermind-lodestar"
-
 
   #
   # Tooling

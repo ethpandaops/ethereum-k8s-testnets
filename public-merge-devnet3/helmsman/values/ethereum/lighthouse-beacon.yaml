@@ -1,6 +1,6 @@
 image:
-  repository: sigp/lighthouse
-  tag: latest-unstable
+  repository: skylenet/lighthouse
+  tag: merge-devnet-3
   pullPolicy: IfNotPresent
 
 p2pNodePort:
