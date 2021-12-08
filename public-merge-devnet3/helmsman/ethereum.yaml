@@ -46,6 +46,13 @@ appsTemplates:
     valuesFiles:
       - values/ethereum/lodestar-beacon.yaml
       - values/ethereum/tolerations/clients.yaml
+  teku: &teku
+    chart: "ethereum-helm-charts/teku"
+    version: "0.1.0"
+    group: teku
+    valuesFiles:
+      - values/ethereum/teku-beacon.yaml
+      - values/ethereum/tolerations/clients.yaml
 
 apps:
 
@@ -132,6 +139,32 @@ apps:
       replicas: 5
       p2pNodePort.startAt: 31280
       extraEnv[0].value: "nethermind-lodestar"
+
+
+  #
+  # Teku/Geth
+  #
+  geth-teku-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30320}}
+  geth-teku-1: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30321}}
+  teku-geth:
+    <<: *common
+    <<: *teku
+    set:
+      replicas: 2
+      p2pNodePort.startAt: 31320
+      extraEnv[0].value: "geth-teku"
+
+  #
+  # Teku/Nethermind
+  #
+  nethermind-teku-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30340}}
+  teku-nethermind:
+    <<: *common
+    <<: *teku
+    set:
+      replicas: 1
+      p2pNodePort.startAt: 31340
+      extraEnv[0].value: "nethermind-teku"
 
   #
   # Tooling
