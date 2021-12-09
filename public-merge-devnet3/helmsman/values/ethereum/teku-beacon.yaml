@@ -22,9 +22,8 @@ extraArgs:
   - --eth1-deposit-contract-address=$(cat /data/testnet_spec/deposit_contract.txt)
   - --eth1-endpoint="http://${SERVICE_PREFIX}-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev):8545"
   - --Xee-endpoint="http://${SERVICE_PREFIX}-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev):8545"
-  - --metrics-host-allowlist="*" # BUG - THIS needs to be there otherwise the following -Xflags won't work
-  - --Xdata-storage-non-canonical-blocks-enabled=true
-  - --Xnetwork-merge-total-terminal-difficulty=5000000000
+  - --data-storage-non-canonical-blocks-enabled=true
+  - --Xnetwork-merge-total-terminal-difficulty-override=5000000000
   - --logging=INFO
 initContainers:
 - name: init-genesis

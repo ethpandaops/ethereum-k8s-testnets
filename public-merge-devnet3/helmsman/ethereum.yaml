@@ -158,11 +158,12 @@ apps:
   # Teku/Nethermind
   #
   nethermind-teku-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30340}}
+  nethermind-teku-1: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30341}}
   teku-nethermind:
     <<: *common
     <<: *teku
     set:
-      replicas: 1
+      replicas: 2
       p2pNodePort.startAt: 31340
       extraEnv[0].value: "nethermind-teku"
 
