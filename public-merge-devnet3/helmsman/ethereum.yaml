@@ -25,12 +25,33 @@ appsTemplates:
     valuesFiles:
       - values/ethereum/geth.yaml
       - values/ethereum/tolerations/clients.yaml
+  nethermind: &nethermind
+    chart: "ethereum-helm-charts/nethermind"
+    version: "0.2.0"
+    group: nethermind
+    valuesFiles:
+      - values/ethereum/nethermind.yaml
+      - values/ethereum/tolerations/clients.yaml
   lighthouse: &lighthouse
     chart: "ethereum-helm-charts/lighthouse"
     version: "0.1.0"
     group: lighthouse
     valuesFiles:
       - values/ethereum/lighthouse-beacon.yaml
+      - values/ethereum/tolerations/clients.yaml
+  lodestar: &lodestar
+    chart: "ethereum-helm-charts/lodestar"
+    version: "0.1.0"
+    group: lodestar
+    valuesFiles:
+      - values/ethereum/lodestar-beacon.yaml
+      - values/ethereum/tolerations/clients.yaml
+  teku: &teku
+    chart: "ethereum-helm-charts/teku"
+    version: "0.1.0"
+    group: teku
+    valuesFiles:
+      - values/ethereum/teku-beacon.yaml
       - values/ethereum/tolerations/clients.yaml
 
 apps:
@@ -71,6 +92,80 @@ apps:
       replicas: 5
       p2pNodePort.startAt: 31140
       extraEnv[0].value: "geth-lighthouse"
+
+  #
+  # Lighthouse/Nethermind
+  #
+  nethermind-lighthouse-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30200}}
+  nethermind-lighthouse-1: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30201}}
+  nethermind-lighthouse-2: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30202}}
+  nethermind-lighthouse-3: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30203}}
+  lighthouse-nethermind:
+    <<: *common
+    <<: *lighthouse
+    set:
+      replicas: 4
+      p2pNodePort.startAt: 31200
+      extraEnv[0].value: "nethermind-lighthouse"
+
+  #
+  # Lodestar/Geth
+  #
+  geth-lodestar-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30240}}
+  geth-lodestar-1: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30241}}
+  geth-lodestar-2: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30242}}
+  geth-lodestar-3: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30243}}
+  geth-lodestar-4: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30244}}
+  lodestar-geth:
+    <<: *common
+    <<: *lodestar
+    set:
+      replicas: 5
+      p2pNodePort.startAt: 31240
+      extraEnv[0].value: "geth-lodestar"
+
+  #
+  # Lodestar/Nethermind
+  #
+  nethermind-lodestar-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30280}}
+  nethermind-lodestar-1: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30281}}
+  nethermind-lodestar-2: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30282}}
+  nethermind-lodestar-3: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30283}}
+  nethermind-lodestar-4: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30284}}
+  lodestar-nethermind:
+    <<: *common
+    <<: *lodestar
+    set:
+      replicas: 5
+      p2pNodePort.startAt: 31280
+      extraEnv[0].value: "nethermind-lodestar"
+
+
+  #
+  # Teku/Geth
+  #
+  geth-teku-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30320}}
+  geth-teku-1: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30321}}
+  teku-geth:
+    <<: *common
+    <<: *teku
+    set:
+      replicas: 2
+      p2pNodePort.startAt: 31320
+      extraEnv[0].value: "geth-teku"
+
+  #
+  # Teku/Nethermind
+  #
+  nethermind-teku-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30340}}
+  nethermind-teku-1: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30341}}
+  teku-nethermind:
+    <<: *common
+    <<: *teku
+    set:
+      replicas: 2
+      p2pNodePort.startAt: 31340
+      extraEnv[0].value: "nethermind-teku"
 
   #
   # Tooling

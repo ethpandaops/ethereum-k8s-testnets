@@ -1,6 +1,6 @@
 image:
-  repository: skylenet/lighthouse
-  tag: merge-devnet-3
+  repository: chainsafe/lodestar
+  tag: next@sha256:e8769d25cd29fa37bfe498e4b378cceb1c5328a84f05cd9c8cf1467ff287352d
   pullPolicy: IfNotPresent
 
 p2pNodePort:
@@ -8,20 +8,27 @@ p2pNodePort:
 
 podManagementPolicy: Parallel
 
-mode: "beacon"
+mode: beacon
 
 extraEnv:
   - name: "SERVICE_PREFIX"
     value: "" # Will be overwritten via `-set` on main helmsman file
 
 extraArgs:
-  - --testnet-dir=/data/testnet_spec
-  - --boot-nodes="$(cat /data/testnet_spec/bootstrap_nodes.txt)"
-  - --eth1
-  - --execution-endpoints="http://${SERVICE_PREFIX}-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev):8545"
-  - --eth1-endpoints="http://${SERVICE_PREFIX}-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev):8545"
-  - --merge
-  - --terminal-total-difficulty-override=5000000000
+  - --genesisStateFile=/data/testnet_spec/genesis.ssz
+  - --paramsFile=/data/testnet_spec/config.yaml
+  - --network.discv5.bootEnrs="$(cat /data/testnet_spec/bootstrap_nodes.txt)"
+  - --network.connectToDiscv5Bootnodes=true
+  - --eth1.depositContractDeployBlock=$(cat /data/testnet_spec/deploy_block.txt)
+  - --eth1.enabled
+  - --eth1.providerUrls="http://${SERVICE_PREFIX}-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev):8545"
+  - --execution.urls="http://${SERVICE_PREFIX}-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev):8545"
+#  - --logLevel=silly
+
+#extraEnv:
+#  - name: DEBUG
+#    value: discv5:service,discv5:sessionService
+
 initContainers:
 - name: init-genesis
   image: alpine:latest
@@ -58,7 +65,7 @@ initContainers:
 
 persistence:
   enabled: true
-  size: 10Gi
+  size: 20Gi
 
 resources: {}
 
