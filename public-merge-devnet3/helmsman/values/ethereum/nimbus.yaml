@@ -1,34 +1,31 @@
 image:
-  repository: chainsafe/lodestar
-  tag: next@sha256:e8769d25cd29fa37bfe498e4b378cceb1c5328a84f05cd9c8cf1467ff287352d
+  repository: parithoshj/nimbus
+  tag: merge-54da321@sha256:aef6872767d4923f77e8d5fc03c7b186aaf518ee90adce4bd2239adc587cfd59
   pullPolicy: IfNotPresent
+
+defaultBinaryPath: /home/user/nimbus-eth2/build/beacon_node
+
+replicas: 1
 
 p2pNodePort:
   enabled: true
 
 podManagementPolicy: Parallel
 
-mode: beacon
-
 extraEnv:
-  - name: "SERVICE_PREFIX"
+  - name: "EL_SERVICE"
     value: "" # Will be overwritten via `-set` on main helmsman file
 
 extraArgs:
-  - --genesisStateFile=/data/testnet_spec/genesis.ssz
-  - --paramsFile=/data/testnet_spec/config.yaml
-  - --network.discv5.bootEnrs="$(cat /data/testnet_spec/bootstrap_nodes.txt)"
-  - --network.connectToDiscv5Bootnodes=true
-  - --eth1.depositContractDeployBlock=$(cat /data/testnet_spec/deploy_block.txt)
-  - --eth1.enabled
-  - --eth1.providerUrls="http://${SERVICE_PREFIX}-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev):8545"
-  - --execution.urls="http://${SERVICE_PREFIX}-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev):8545"
-#  - --logLevel=silly
-
-#extraEnv:
-#  - name: DEBUG
-#    value: discv5:service,discv5:sessionService
-
+  - --non-interactive=true
+  - --network=/data/testnet_spec/
+  - --bootstrap-file=/data/testnet_spec/bootstrap_nodes.txt
+  - --web3-url="ws://${EL_SERVICE}"
+  - --max-peers=100
+  - --graffiti=$(hostname | cut -c -32)
+  - --doppelganger-detection=false
+  - --terminal-total-difficulty-override=5000000000
+  - --log-level="DEBUG;DEBUG:discv5,libp2p;REQUIRED:none;DISABLED:none"
 initContainers:
 - name: init-genesis
   image: alpine:latest
@@ -67,7 +64,7 @@ initContainers:
 
 persistence:
   enabled: true
-  size: 20Gi
+  size: 10Gi
 
 resources: {}
 

@@ -221,3 +221,30 @@ spec:
             name: github-external
             port:
               number: 443
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-config-cl-genesis-depositcontractblock
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-3/deposit_contract_block.txt
+spec:
+  tls:
+  - hosts:
+    - "config.{{ .Values.domain }}"
+  rules:
+  - host: "config.{{ .Values.domain }}"
+    http:
+      paths:
+      - path: /cl/genesis/deposit_contract_block.txt
+        pathType: Exact
+        backend:
+          service:
+            name: github-external
+            port:
+              number: 443

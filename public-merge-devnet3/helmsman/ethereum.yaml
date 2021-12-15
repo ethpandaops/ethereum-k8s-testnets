@@ -53,6 +53,13 @@ appsTemplates:
     valuesFiles:
       - values/ethereum/teku-beacon.yaml
       - values/ethereum/tolerations/clients.yaml
+  nimbus: &nimbus
+    chart: "ethereum-helm-charts/nimbus"
+    version: "0.2.1"
+    group: nimbus
+    valuesFiles:
+      - values/ethereum/nimbus.yaml
+      - values/ethereum/tolerations/clients.yaml
 
 apps:
 
@@ -168,6 +175,22 @@ apps:
       extraEnv[0].value: "nethermind-teku"
 
   #
+  # Nimbus/Geth
+  #
+  geth-nimbus-0: {<<: *common, <<: *geth,   set: {p2pNodePort.port: 30380}}
+  geth-nimbus-1: {<<: *common, <<: *geth,   set: {p2pNodePort.port: 30381}}
+  nimbus-geth-0: {<<: *common, <<: *nimbus, set: {p2pNodePort.port: 31380, "extraEnv[0].value": "geth-nimbus-0:8546"}}
+  nimbus-geth-1: {<<: *common, <<: *nimbus, set: {p2pNodePort.port: 31381, "extraEnv[0].value": "geth-nimbus-1:8546"}}
+
+  #
+  # Nimbus/Nethermind
+  #
+  nethermind-nimbus-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30420}}
+  nethermind-nimbus-1: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30421}}
+  nimbus-nethermind-0: {<<: *common, <<: *nimbus,     set: {p2pNodePort.port: 31420, "extraEnv[0].value": "nethermind-nimbus-0:8545"}}
+  nimbus-nethermind-1: {<<: *common, <<: *nimbus,     set: {p2pNodePort.port: 31421, "extraEnv[0].value": "nethermind-nimbus-1:8545"}}
+
+  #
   # Tooling
   #
   ethstats:
@@ -177,6 +200,12 @@ apps:
     priority: -110
     valuesFiles:
       - values/ethereum/ethstats.yaml
+  consensus-monitor:
+    <<: *common
+    chart: "ethereum-helm-charts/consensus-monitor"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/consensus-monitor.yaml
   dshackle:
     <<: *common
     chart: "ethereum-helm-charts/dshackle"
@@ -223,3 +252,4 @@ apps:
       config.params.ethereum.rpcUrl: "https://rpc.${DO_DNS_DOMAIN}"
       config.params.ethereum.explorerUrl: "https://explorer.${DO_DNS_DOMAIN}"
       config.params.ethereum.beaconexplorerUrl: "https://beaconchain.${DO_DNS_DOMAIN}"
+      config.params.ethereum.consensusmonitorUrl: "https://consensusmonitor.${DO_DNS_DOMAIN}"
