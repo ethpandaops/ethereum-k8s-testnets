@@ -30,4 +30,5 @@ customMarkdown: |-
   https://config.devnet3.themerge.dev/cl/genesis/genesis.ssz
   https://config.devnet3.themerge.dev/cl/genesis/deploy_block.txt
   https://config.devnet3.themerge.dev/cl/genesis/deposit_contract.txt
+  https://config.devnet3.themerge.dev/cl/genesis/deposit_contract_block.txt
   ```
