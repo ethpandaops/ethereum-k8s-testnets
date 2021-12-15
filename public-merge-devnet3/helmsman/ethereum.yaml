@@ -252,3 +252,4 @@ apps:
       config.params.ethereum.rpcUrl: "https://rpc.${DO_DNS_DOMAIN}"
       config.params.ethereum.explorerUrl: "https://explorer.${DO_DNS_DOMAIN}"
       config.params.ethereum.beaconexplorerUrl: "https://beaconchain.${DO_DNS_DOMAIN}"
+      config.params.ethereum.consensusmonitorUrl: "https://consensusmonitor.${DO_DNS_DOMAIN}"

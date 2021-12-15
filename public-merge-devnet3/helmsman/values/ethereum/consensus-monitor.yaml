@@ -6,7 +6,7 @@ image:
 # ENV vars will be replaced using the 'init-config' init container
 config: |
   [network]
-  name = "pithos"
+  name = "merge-devnet3"
   etherscan_api_key = "some-etherscan-api-key"
 
   [consensus_chain]
