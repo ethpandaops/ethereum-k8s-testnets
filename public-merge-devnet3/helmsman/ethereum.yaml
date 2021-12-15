@@ -200,6 +200,12 @@ apps:
     priority: -110
     valuesFiles:
       - values/ethereum/ethstats.yaml
+  consensus-monitor:
+    <<: *common
+    chart: "ethereum-helm-charts/consensus-monitor"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/consensus-monitor.yaml
   dshackle:
     <<: *common
     chart: "ethereum-helm-charts/dshackle"
