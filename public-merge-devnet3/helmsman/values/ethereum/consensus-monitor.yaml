@@ -115,6 +115,22 @@ initContainers:
         " >> /config-update/config.toml;
       done;
 
+      for i in {0..1}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://prysm-geth-$i.prysm-geth-headless.ethereum.svc.cluster.local:3500'
+        execution = 'Geth ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..1}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://prysm-nethermind-$i.prysm-nethermind-headless.ethereum.svc.cluster.local:3500'
+        execution = 'Nethermind ($i)'
+        " >> /config-update/config.toml;
+      done;
+
       cat /config-update/config.toml;
 
     volumeMounts:

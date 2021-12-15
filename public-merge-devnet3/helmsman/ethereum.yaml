@@ -60,6 +60,13 @@ appsTemplates:
     valuesFiles:
       - values/ethereum/nimbus.yaml
       - values/ethereum/tolerations/clients.yaml
+  prysm: &prysm
+    chart: "ethereum-helm-charts/prysm"
+    version: "0.1.0"
+    group: prysm
+    valuesFiles:
+      - values/ethereum/prysm-beacon.yaml
+      - values/ethereum/tolerations/clients.yaml
 
 apps:
 
@@ -189,6 +196,32 @@ apps:
   nethermind-nimbus-1: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30421}}
   nimbus-nethermind-0: {<<: *common, <<: *nimbus,     set: {p2pNodePort.port: 31420, "extraEnv[0].value": "nethermind-nimbus-0:8545"}}
   nimbus-nethermind-1: {<<: *common, <<: *nimbus,     set: {p2pNodePort.port: 31421, "extraEnv[0].value": "nethermind-nimbus-1:8545"}}
+
+  #
+  # Prysm/Geth
+  #
+  geth-prysm-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30440}}
+  geth-prysm-1: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30441}}
+  prysm-geth:
+    <<: *common
+    <<: *prysm
+    set:
+      replicas: 2
+      p2pNodePort.startAt: 31440
+      extraEnv[0].value: "geth-prysm"
+
+  #
+  # Prysm/Nethermind
+  #
+  nethermind-prysm-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30480}}
+  nethermind-prysm-1: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30481}}
+  prysm-nethermind:
+    <<: *common
+    <<: *prysm
+    set:
+      replicas: 2
+      p2pNodePort.startAt: 31480
+      extraEnv[0].value: "nethermind-prysm"
 
   #
   # Tooling
