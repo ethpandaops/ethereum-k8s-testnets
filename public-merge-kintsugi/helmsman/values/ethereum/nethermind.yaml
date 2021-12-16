@@ -1,0 +1,63 @@
+image:
+  repository: nethermindeth/nethermind
+  tag: kintsugi_v3_0.1
+  pullPolicy: IfNotPresent
+
+replicas: 1
+
+p2pNodePort:
+  enabled: true
+
+podManagementPolicy: Parallel
+
+extraArgs:
+- --Discovery.Bootnodes="$(cat /data/bootnode.txt)"
+- --config=kintsugi_devnet
+- --Init.ChainSpecPath=/data/chainspec.json
+- --Init.IsMining=false
+- --EthStats.Enabled=true
+- --EthStats.Name=$(hostname)
+- --EthStats.Secret=KintsugiNetwork
+- --EthStats.Server=ws://ethstats:3000/api/
+- --JsonRpc.EnabledModules="net,eth,consensus,engine,subscribe,web3"
+- --Mining.Enabled=false
+- --Merge.Enabled=true
+- --Merge.TerminalTotalDifficulty=5000000000
+- --Init.DiagnosticMode="None"
+#- --log=TRACE
+
+
+initContainers:
+- name: init-chainspec
+  image: alpine:latest
+  imagePullPolicy: IfNotPresent
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+  command:
+    - sh
+    - -ace
+    - >
+      BOOTNODE=enode://6f377dd1ef5a3272d7e02fac9064c4f95d74f7edfd866e59ded774ee5b4649ff61c3f24c95f5c3d07d692b447f0569716b8921b6861810b96a705c92e1d27ff9@161.35.67.219:30303;
+      GENESIS_CHAINSPEC_URI=https://config.kintsugi.themerge.dev/el/genesis/chainspec.json;
+      if ! [ -f /data/chainspec.json ];
+      then
+        wget -O /data/chainspec.json $GENESIS_CHAINSPEC_URI;
+        echo "chainspec init done";
+      else
+        echo "chainspec is already there";
+      fi;
+      echo $BOOTNODE > /data/bootnode.txt;
+      echo "bootnode init done: $(cat /data/bootnode.txt)";
+  volumeMounts:
+    - name: storage
+      mountPath: "/data"
+
+persistence:
+  enabled: true
+  size: 50Gi
+
+resources: {}
+
+serviceMonitor:
+  enabled: true

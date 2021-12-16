@@ -1,0 +1,434 @@
+image:
+  repository: ralexstokes/ethereum_consensus_monitor
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# ENV vars will be replaced using the 'init-config' init container
+config: |
+  [network]
+  name = "kintsugi"
+  etherscan_api_key = "some-etherscan-api-key"
+
+  [consensus_chain]
+  seconds_per_slot = 12
+  slots_per_epoch = 32
+  genesis_time = $GENESIS_TIME
+
+  [weak_subjectivity]
+  provider_endpoint = "http://eth2-ws-provider_eth2_ws_server_1:80"
+
+  [monitor]
+  output_dir = "public"
+  port = 8080
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.183.133:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.183.115:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.183.60:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.187.162:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.2.234:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://139.59.87.214:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.187.106:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.187.67:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.187.39:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.187.34:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.179.109:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.179.95:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.179.2:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.189.227:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.189.177:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.189.147:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.189.23:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.181.254:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.189.10:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://68.183.92.205:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.181.93:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.181.227:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.181.221:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.185.207:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.185.200:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://167.172.225.12:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.177.121:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://46.101.115.180:4000"
+  execution = "nethermind"
+
+  [[monitor.endpoints]]
+  consensus = "http://161.35.196.127:4000"
+  execution = "nethermind"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.2.74:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.2.70:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.232.190.239:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://161.35.196.44:4000"
+  execution = "besu"
+
+  [[monitor.endpoints]]
+  consensus = "http://134.122.72.77:4000"
+  execution = "nethermind"
+
+  [[monitor.endpoints]]
+  consensus = "http://157.245.2.68:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://134.122.72.51:4000"
+  execution = "nethermind"
+
+  [[monitor.endpoints]]
+  consensus = "http://164.90.175.241:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://164.90.175.157:4000"
+  execution = "nethermind"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.12.167:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.12.157:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.12.150:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.12.147:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.12.146:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.12.81:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://161.35.79.157:4000"
+  execution = "besu"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.12.58:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.12.55:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://161.35.79.127:4000"
+  execution = "nethermind"
+
+  [[monitor.endpoints]]
+  consensus = "http://134.122.67.117:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.12.16:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.12.9:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.12.5:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://134.209.163.101:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.4.226:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.12.3:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.4.222:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.4.216:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.4.223:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://167.99.117.237:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.225.4.215:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://167.99.53.70:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://161.35.71.18:4000"
+  execution = "nethermind"
+
+  [[monitor.endpoints]]
+  consensus = "http://161.35.71.5:4000"
+  execution = "besu"
+
+  [[monitor.endpoints]]
+  consensus = "http://161.35.67.219:4000"
+  execution = "none"
+
+  [[monitor.endpoints]]
+  consensus = "http://161.35.75.86:4000"
+  execution = "nethermind"
+
+  [[monitor.endpoints]]
+  consensus = "http://161.35.75.78:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://161.35.67.200:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://161.35.67.186:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://161.35.67.163:4000"
+  execution = "besu"
+
+  [[monitor.endpoints]]
+  consensus = "http://161.35.67.221:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://165.22.46.104:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://161.35.67.188:4000"
+  execution = "nethermind"
+
+  [[monitor.endpoints]]
+  consensus = "http://207.154.238.34:4000"
+  execution = "nethermind"
+
+customArgs:
+  - --config-path=/config-update/config.toml
+
+extraVolumes:
+  - name: config-update
+    emptyDir: {}
+
+extraVolumeMounts:
+  - name: config-update
+    mountPath: "/config-update"
+
+initContainers:
+  - name: init-config
+    image: bash:latest
+    imagePullPolicy: IfNotPresent
+    securityContext:
+      runAsNonRoot: false
+      runAsUser: 0
+    command:
+    - bash
+    - -c
+    - >
+      apk add jq curl gettext;
+      BEACON_API_ENDPOINT=http://lighthouse-geth:5052/eth/v1/beacon/genesis;
+      echo "waiting to fetch beacon info from $BEACON_API_ENDPOINT";
+      while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $BEACON_API_ENDPOINT)" != "200" ]]; do sleep 5; done;
+      export GENESIS_TIME=$(curl -s $BEACON_API_ENDPOINT | jq -r '.data.genesis_time');
+      echo "got genesis time: $GENESIS_TIME";
+      envsubst < /config.toml > /config-update/config.toml;
+
+      for i in {0..4}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://lighthouse-geth-$i.lighthouse-geth-headless.ethereum.svc.cluster.local:5052'
+        execution = 'Geth ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..3}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://lighthouse-nethermind-$i.lighthouse-nethermind-headless.ethereum.svc.cluster.local:5052'
+        execution = 'Nethermind ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..4}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://lodestar-geth-$i.lodestar-geth-headless.ethereum.svc.cluster.local:9596'
+        execution = 'Geth ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..4}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://lodestar-nethermind-$i.lodestar-nethermind-headless.ethereum.svc.cluster.local:9596'
+        execution = 'Nethermind ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..1}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://teku-geth-$i.teku-geth-headless.ethereum.svc.cluster.local:5051'
+        execution = 'Geth ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..1}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://teku-nethermind-$i.teku-nethermind-headless.ethereum.svc.cluster.local:5051'
+        execution = 'Nethermind ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..1}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://nimbus-geth-$i:5052'
+        execution = 'Geth ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..1}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://nimbus-nethermind-$i:5052'
+        execution = 'Nethermind ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..1}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://prysm-geth-$i.prysm-geth-headless.ethereum.svc.cluster.local:3500'
+        execution = 'Geth ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..1}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://prysm-nethermind-$i.prysm-nethermind-headless.ethereum.svc.cluster.local:3500'
+        execution = 'Nethermind ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      cat /config-update/config.toml;
+
+    volumeMounts:
+      - name: config-update
+        mountPath: /config-update
+      - name: config
+        mountPath: "/config.toml"
+        subPath: config.toml
+        readOnly: true
