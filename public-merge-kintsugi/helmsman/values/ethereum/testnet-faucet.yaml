@@ -1,0 +1,21 @@
+image:
+  repository: skylenet/testnet-faucet
+  tag: latest@sha256:88ccf0c23817941802ca05831d4069281d0f50a3fe58ac8e8e280874ce175c2d
+  pullPolicy: IfNotPresent
+
+config:
+  webui:
+    title: "Testnet faucet"
+    buttonText: "Request 50 Testnet ETH"
+    logoUrl: "https://github.com/parithosh/testnet-faucet/raw/master/public/assets/images/ethereum-merge.png"
+    footer: "Forked from <b>Slock.it</b> by Pari - Send feedback to https://github.com/parithosh/testnet-faucet"
+    recaptchaKey: "6LfbgmsdAAAAALLKaIb2tFlAGrNl5DhUhytXi-u6"
+  server:
+    environment: live
+    debug: true
+    Ethereum:
+      milliEtherToTransfer: 50000
+      gasLimit: "300000"
+      live:
+        rpc: "http://dshackle:8545/eth"
+        account: "0xf97e180c050e5Ab072211Ad2C213Eb5AEE4DF134"

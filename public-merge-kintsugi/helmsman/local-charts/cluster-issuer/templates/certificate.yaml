@@ -1,0 +1,13 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+ name: {{ include "cluster-issuer.fullname" . }}-default-cert
+spec:
+ secretName: {{ .Values.defaultCert.secretName }}
+ issuerRef:
+   name: {{ include "cluster-issuer.fullname" . }}
+   kind: ClusterIssuer
+ dnsNames:
+   - '*.{{ .Values.defaultCert.domain }}'
+   - '{{ .Values.defaultCert.domain }}'

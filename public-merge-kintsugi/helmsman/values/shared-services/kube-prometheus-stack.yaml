@@ -1,0 +1,78 @@
+
+alertmanager:
+  enabled: true
+  ingress:
+    enabled: false
+  alertmanagerSpec:
+    retention: 120h
+    resources: {}
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: do-block-storage
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 50Gi
+
+grafana:
+  enabled: true
+  adminPassword: prom-operator
+  ingress:
+    enabled: false
+
+
+kubeEtcd:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
+
+prometheusOperator:
+  enabled: true
+  resources: {}
+
+prometheus:
+  enabled: true
+  ingress:
+    enabled: false
+  prometheusSpec:
+    podMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false
+    retention: 5d
+    retentionSize: ""
+    resources: {}
+    nodeSelector:
+      dedicated: prometheus
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: dedicated
+              operator: In
+              values:
+              - prometheus
+    tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "prometheus"
+        effect: "NoSchedule"
+    initContainers:
+      # Workaround for edge cases where prometheus goes into an OOM loop when booting
+      # up and reading the WAL: https://github.com/prometheus/prometheus/issues/6934
+      - name: delete-wal
+        image: busybox
+        command: ['sh', '-c', "rm -rf /prometheus/wal;"]
+        volumeMounts:
+          - mountPath: /prometheus
+            name: prometheus-kube-prometheus-stack-prometheus-db
+            subPath: prometheus-db
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: local-path
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 200Gi

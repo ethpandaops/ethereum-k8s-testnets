@@ -1,0 +1,61 @@
+image:
+  repository: parithoshj/geth
+  tag: merge-d99ac5a
+  pullPolicy: IfNotPresent
+
+replicas: 1
+
+p2pNodePort:
+  enabled: true
+
+podManagementPolicy: Parallel
+
+extraArgs:
+- --catalyst
+- --bootnodes="$(cat /data/bootnode.txt)"
+- --networkid=$(cat /data/chainid.txt)
+- --ethstats=$(hostname):KintsugiNetwork@ethstats:3000
+- --syncmode=full
+- --gcmode=archive
+- --ws.api="eth,net,web3,debug,txpool,engine"
+- --http.api="debug,net,eth,web3,txpool,engine"
+#- --verbosity=5
+
+initContainers:
+- name: init-genesis
+  image: parithoshj/geth:merge-d99ac5a
+  imagePullPolicy: IfNotPresent
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+  command:
+    - sh
+    - -ace
+    - >
+      BOOTNODE=enode://6f377dd1ef5a3272d7e02fac9064c4f95d74f7edfd866e59ded774ee5b4649ff61c3f24c95f5c3d07d692b447f0569716b8921b6861810b96a705c92e1d27ff9@161.35.67.219:30303;
+      GENESIS_URI=https://config.kintsugi.themerge.dev/el/genesis/geth.json;
+      if ! [ -f /data/genesis_init_done ];
+      then
+        wget -O /data/genesis.json $GENESIS_URI;
+        apk update && apk add jq;
+        cat /data/genesis.json | jq -r '.config.chainId' > /data/chainid.txt;
+        geth init --datadir /data /data/genesis.json;
+        touch /data/genesis_init_done;
+        echo "genesis init done";
+      else
+        echo "genesis is already initialized";
+      fi;
+      echo $BOOTNODE > /data/bootnode.txt;
+      echo "bootnode init done: $(cat /data/bootnode.txt)";
+  volumeMounts:
+    - name: storage
+      mountPath: "/data"
+
+persistence:
+  enabled: true
+  size: 100Gi
+
+resources: {}
+
+serviceMonitor:
+  enabled: true
