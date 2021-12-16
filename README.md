@@ -13,6 +13,10 @@ Private network from scratch running all the major clients.
 
 Providing the infrastructure and tooling for https://devnet3.themerge.dev/
 
+### [Merge Kintsugi](public-merge-kintsugi)
+
+Providing the infrastructure and tooling for https://kintsugi.themerge.dev/
+
 ## License
 
 [MIT License](LICENSE)
