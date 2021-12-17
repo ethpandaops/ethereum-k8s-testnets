@@ -10,6 +10,12 @@ metadata:
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-origin: "*"
     nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      sub_filter_once off;
+      sub_filter_types text/html;
+      sub_filter 'https://gochain.io' '';
+      sub_filter 'GoChain' '';
+      sub_filter 'This is an RPC endpoint for' 'RPC proxy based on https://github.com/gochain/rpc-proxy';
 spec:
   tls:
   - hosts:
@@ -23,6 +29,6 @@ spec:
         backend:
           service:
             # TODO: change to dshackle once https://github.com/emeraldpay/dshackle/issues/132 is solved
-            name: geth-lighthouse-2
+            name: rpc-proxy
             port:
               number: 8545
