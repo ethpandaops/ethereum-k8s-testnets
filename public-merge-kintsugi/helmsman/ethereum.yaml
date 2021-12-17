@@ -242,6 +242,13 @@ apps:
     valuesFiles:
       - values/ethereum/consensus-monitor.yaml
       - values/ethereum/tolerations/blockscout.yaml
+  rpc-proxy:
+    <<: *common
+    chart: "ethereum-helm-charts/rpc-proxy"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/rpc-proxy.yaml
+      - values/ethereum/tolerations/clients.yaml
   dshackle:
     <<: *common
     chart: "ethereum-helm-charts/dshackle"
