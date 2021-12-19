@@ -1,6 +1,6 @@
 image:
   repository: skylenet/blockscout
-  tag: v4.0.0-beta
+  tag: v4.0.0-beta-lessbranding
   pullPolicy: IfNotPresent
 
 config:
@@ -22,7 +22,7 @@ config:
   ETHEREUM_JSONRPC_HTTP_URL: http://geth-lighthouse-archive-0:8545
   ETHEREUM_JSONRPC_WS_URL: ws://geth-lighthouse-archive-0:8546
   NETWORK: Ethereum
-  SUBNETWORK: Testnet
+  SUBNETWORK: Devnet3
   BLOCK_TRANSFORMER: base
   POOL_SIZE: "15"
   CHAIN_SPEC_PATH: /config-update/genesis.json
