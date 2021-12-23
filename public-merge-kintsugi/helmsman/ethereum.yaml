@@ -270,15 +270,18 @@ apps:
     valuesFiles:
       - values/ethereum/blockscout.yaml
       - values/ethereum/tolerations/blockscout.yaml
-  testnet-faucet:
+  fauceth:
     <<: *common
-    chart: "ethereum-helm-charts/testnet-faucet"
+    chart: "ethereum-helm-charts/fauceth"
     version: "0.1.0"
     valuesFiles:
-      - values/ethereum/testnet-faucet.yaml
+      - values/ethereum/fauceth.yaml
     setString:
-      config.server.Captcha.secret: "$FAUCET_CAPTCHA_SECRET"
-      config.server.Ethereum.live.privateKey: "$FAUCET_PRIVATE_KEY"
+      secretEnv.HCAPTCHA_SITEKEY: "$FAUCETH_HCAPTCHA_SITEKEY"
+      secretEnv.HCAPTCHA_SECRET: "$FAUCETH_HCAPTCHA_SECRET"
+      secretEnv.CHAIN_ID: "$EXECUTION_CHAIN_ID"
+      secretEnv.APP_ETHKEY: "$FAUCETH_APP_ETHKEY"
+      secretEnv.CHAIN_EXPLORER: "https://explorer.${DO_DNS_DOMAIN}"
     set:
       config.server.Ethereum.chainId: $EXECUTION_CHAIN_ID
   testnet-homepage:
