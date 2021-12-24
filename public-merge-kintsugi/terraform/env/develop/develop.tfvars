@@ -43,7 +43,7 @@ firewall_rules = {
   ]
 }
 
-kubernetes_node_pool = [
+kubernetes_node_pools = [
   {
     name = "clients"
     size = "s-4vcpu-8gb-amd"
