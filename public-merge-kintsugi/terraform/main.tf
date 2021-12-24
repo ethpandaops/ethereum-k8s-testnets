@@ -63,6 +63,42 @@ resource "digitalocean_kubernetes_cluster" "main" {
 
 }
 
+# Firewall to open up NodePort range
+resource "digitalocean_firewall" "firewall" {
+  name = local.cluster_name
+
+  tags = [local.cluster_name]
+
+  inbound_rule {
+    protocol         = "udp"
+    port_range       = "30000-32768"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "30000-32768"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol              = "tcp"
+    port_range            = "1-65535"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol              = "udp"
+    port_range            = "1-65535"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol              = "icmp"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+}
+
 # Dedicated pool of nodes for ethereum clients
 resource "digitalocean_kubernetes_node_pool" "clients" {
   cluster_id = digitalocean_kubernetes_cluster.main.id
