@@ -4,7 +4,7 @@ image:
   pullPolicy: IfNotPresent
 
 secretEnv:
-  APP_AMOUNT: "33000000000000000000" # 33 ETH
+  APP_AMOUNT: "11000000000000000000" # 11 ETH
   APP_IMAGEURL: "https://github.com/parithosh/testnet-faucet/raw/master/public/assets/images/ethereum-merge.png"
   APP_TITLE: "Kintsugi FaucETH"
   CHAIN_RPC: "http://dshackle:8545/eth"

@@ -1,6 +1,6 @@
 image:
   repository: sigp/lighthouse
-  tag: latest-unstable
+  tag: latest-unstable@sha256:b1d84582f4686bc65a77da84468b21ac0622d027eaef74d682c794893cfd1efa
   pullPolicy: IfNotPresent
 
 p2pNodePort:
