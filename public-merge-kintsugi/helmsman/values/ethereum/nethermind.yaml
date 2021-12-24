@@ -1,6 +1,6 @@
 image:
   repository: nethermindeth/nethermind
-  tag: kintsugi_v3_0.1
+  tag: kintsugi_0.6
   pullPolicy: IfNotPresent
 
 replicas: 1
@@ -14,7 +14,7 @@ extraArgs:
 - --Discovery.Bootnodes="$(cat /data/bootnode.txt)"
 - --config=kintsugi_devnet
 - --Init.ChainSpecPath=/data/chainspec.json
-- --Init.IsMining=false
+- --Init.IsMining=true
 - --EthStats.Enabled=true
 - --EthStats.Name=$(hostname)
 - --EthStats.Secret=KintsugiNetwork

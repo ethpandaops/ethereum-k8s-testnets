@@ -1,6 +1,6 @@
 image:
   repository: skylenet/prysm-debian
-  tag: kintsugi-30ed0d
+  tag: kintsugi-97027b
   pullPolicy: IfNotPresent
 
 p2pNodePort:
