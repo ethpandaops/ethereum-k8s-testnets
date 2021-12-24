@@ -10,7 +10,10 @@ controller:
   service:
     annotations:
       service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
-
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
 
 defaultBackend:
   enabled: true
