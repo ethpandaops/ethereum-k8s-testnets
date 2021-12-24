@@ -74,6 +74,10 @@ initContainers:
         readOnly: true
 
 postgresql:
+  resources:
+    requests:
+      memory: 11Gi
+      cpu: 1200m
   metrics:
     enabled: true
     serviceMonitor:
