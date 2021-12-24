@@ -3,6 +3,14 @@ controller:
   minAvailable: 1
   extraArgs:
     default-ssl-certificate: "shared-services/default-cert"
+  config:
+    use-forwarded-headers: "true"
+    compute-full-forwarded-for: "true"
+    use-proxy-protocol: "true"
+  service:
+    annotations:
+      service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
+
 
 defaultBackend:
   enabled: true
