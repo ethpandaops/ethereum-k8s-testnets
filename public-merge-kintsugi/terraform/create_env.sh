@@ -19,6 +19,6 @@ ln -s ../../main.tf .
 ln -s ../../variables.tf .
 
 cp ../../example_backend.tf .
-cp ../../example_env.tfvars .
+cp ../../example_env.tfvars ./${env_name}.tfvars
 
 echo "Finished creating: ${env_name}"

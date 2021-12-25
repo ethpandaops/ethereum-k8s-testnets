@@ -7,7 +7,7 @@ on:
         required: true
 
 jobs:
-  terraform-plan:
+  terraform-apply:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.github_action_environment }}
     defaults:
