@@ -5,7 +5,7 @@ digitalocean_domain              = "kintsugi.themerge.dev"
 digitalocean_vpc_ip_range        = "10.120.0.0/16"
 # list available options with `doctl compute size list`
 kubernetes_cluster_main_values = {
-  size = "s-1vcpu-1gb"
+  size = "s-1vcpu-2gb-amd"
   labels = {
     priority = "high"
     service  = "default"
@@ -46,7 +46,7 @@ firewall_rules = {
 kubernetes_node_pools = [
   {
     name = "clients"
-    size = "s-4vcpu-8gb-amd"
+    size = "s-1vcpu-2gb-amd"
     labels = {
       dedicated = "clients"
     }
@@ -60,7 +60,7 @@ kubernetes_node_pools = [
   },
   {
     name = "beaconexplorer"
-    size = "so1_5-2vcpu-16gb"
+    size = "s-1vcpu-2gb-amd"
     labels = {
       dedicated = "beaconexplorer"
     }
@@ -74,7 +74,7 @@ kubernetes_node_pools = [
   },
   {
     name = "blockscout"
-    size = "so1_5-2vcpu-16gb"
+    size = "s-1vcpu-2gb-amd"
     labels = {
       dedicated = "blockscout"
     }
@@ -88,7 +88,7 @@ kubernetes_node_pools = [
   },
   {
     name = "prometheus"
-    size = "m3-4vcpu-32gb"
+    size = "s-1vcpu-2gb-amd"
     labels = {
       dedicated = "prometheus"
     }
