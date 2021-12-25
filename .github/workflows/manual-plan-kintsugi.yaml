@@ -2,7 +2,7 @@ name: Manual - Terraform Plan Kintsugi
 on:
   workflow_dispatch:
     inputs:
-      env:
+      github_action_environment:
         description: "The environment to deploy to"
         required: true
 
