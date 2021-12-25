@@ -34,6 +34,6 @@ jobs:
         with:
           tf_actions_version: 0.15.4
           tf_actions_subcommand: "plan"
-          tf_actions_working_dir: "."
+          tf_actions_working_dir: "public-merge-kintsugi/terraform/env/${{ github.event.inputs.github_action_environment }}"
           tf_actions_comment: true
           args: "--var-file=${{ github.event.inputs.github_action_environment }}.tfvars --var do_token=${{env.DIGITALOCEAN_ACCESS_TOKEN}}"
