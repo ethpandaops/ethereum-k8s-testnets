@@ -1,4 +1,4 @@
-name: Terraform Plan GKE
+name: Manual - Terraform Plan Kintsugi
 on:
   workflow_dispatch:
     inputs:
