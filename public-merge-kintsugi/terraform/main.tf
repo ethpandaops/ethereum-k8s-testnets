@@ -1,46 +1,34 @@
 terraform {
   required_providers {
     digitalocean = {
-      source = "digitalocean/digitalocean"
+      source  = "digitalocean/digitalocean"
       version = "~> 2.11.1"
     }
   }
 }
-
-variable "do_token" {}
 
 # Configure the DigitalOcean Provider
 provider "digitalocean" {
   token = var.do_token
 }
 
-variable "region" {
-  type    = string
-  default = "ams3" # list available regions with `doctl compute region list`
-}
-
-variable "cluster_name" {
-  type    = string
-  default = "eth-k8s-merge-kintsugi"
-}
-
 locals {
   cluster_name = format("%s-%s", var.cluster_name, var.region)
-  common_tags = [ local.cluster_name, "ethereum-kubernetes" ]
+  common_tags  = [local.cluster_name, "ethereum-kubernetes"]
 }
 
 data "digitalocean_kubernetes_versions" "main" {
-  version_prefix = "1.21.5" # list available options with `doctl kubernetes options versions`
+  version_prefix = var.digitalocean_kubernetes_versions # list available options with `doctl kubernetes options versions`
 }
 
 resource "digitalocean_domain" "default" {
-  name       = "kintsugi.themerge.dev"
+  name = var.digitalocean_domain
 }
 
 resource "digitalocean_vpc" "main" {
   name     = local.cluster_name
   region   = var.region
-  ip_range = "10.120.0.0/16"
+  ip_range = var.digitalocean_vpc_ip_range
 }
 
 resource "digitalocean_kubernetes_cluster" "main" {
@@ -52,12 +40,9 @@ resource "digitalocean_kubernetes_cluster" "main" {
 
   node_pool {
     name       = "${local.cluster_name}-default"
-    size       = "s-4vcpu-8gb-amd" # list available options with `doctl compute size list`
-    labels = {
-      priority  = "high"
-      service   = "default"
-    }
-    node_count = 2
+    size       = var.kubernetes_cluster_main_values.size
+    labels     = var.kubernetes_cluster_main_values.labels
+    node_count = var.kubernetes_cluster_main_values.node_count
     tags       = concat(local.common_tags, ["default"])
   }
 
@@ -69,105 +54,38 @@ resource "digitalocean_firewall" "firewall" {
 
   tags = [local.cluster_name]
 
-  inbound_rule {
-    protocol         = "udp"
-    port_range       = "30000-32768"
-    source_addresses = ["0.0.0.0/0", "::/0"]
+  dynamic "inbound_rule" {
+    for_each = var.firewall_rules.inbound_rules
+    content {
+      protocol         = inbound_rule.value["protocol"]
+      port_range       = inbound_rule.value["port_range"]
+      source_addresses = inbound_rule.value["source_addresses"]
+    }
   }
 
-  inbound_rule {
-    protocol         = "tcp"
-    port_range       = "30000-32768"
-    source_addresses = ["0.0.0.0/0", "::/0"]
+  dynamic "outbound_rule" {
+    for_each = var.firewall_rules.outbound_rules
+    content {
+      protocol              = outbound_rule.value["protocol"]
+      port_range            = try(outbound_rule.value["port_range"], null)
+      destination_addresses = outbound_rule.value["destination_addresses"]
+    }
   }
 
-  outbound_rule {
-    protocol              = "tcp"
-    port_range            = "1-65535"
-    destination_addresses = ["0.0.0.0/0", "::/0"]
-  }
-
-  outbound_rule {
-    protocol              = "udp"
-    port_range            = "1-65535"
-    destination_addresses = ["0.0.0.0/0", "::/0"]
-  }
-
-  outbound_rule {
-    protocol              = "icmp"
-    destination_addresses = ["0.0.0.0/0", "::/0"]
-  }
 }
 
 # Dedicated pool of nodes for ethereum clients
-resource "digitalocean_kubernetes_node_pool" "clients" {
+
+module "kubernetes_node_pools" {
+  source   = "../../modules/digitalocean_kubernetes_node_pool/"
+  for_each = { for node_pool in var.kubernetes_node_pools : node_pool.name => node_pool }
+
   cluster_id = digitalocean_kubernetes_cluster.main.id
-  name       = "${local.cluster_name}-clients"
-  size       = "s-4vcpu-8gb-amd" # $48/month
-  node_count  = 15
-  tags       = concat(local.common_tags, ["clients"])
+  pool_name  = "${local.cluster_name}-${each.value.name}"
+  pool_size  = each.value.size
+  node_count = each.value.node_count
+  tags       = concat(local.common_tags, each.value.tags)
+  labels     = each.value.labels
+  taint      = each.value.taint
 
-  labels = {
-    dedicated  = "clients"
-  }
-  taint {
-    key    = "dedicated"
-    value  = "clients"
-    effect = "NoSchedule"
-  }
-}
-
-# Dedicated pool of nodes for the beacon explorer
-resource "digitalocean_kubernetes_node_pool" "beaconexplorer" {
-  cluster_id = digitalocean_kubernetes_cluster.main.id
-  name       = "${local.cluster_name}-beaconexplorer"
-  size       = "so1_5-2vcpu-16gb" # $155/month (450GB NVMe)
-  node_count = 1
-  tags       = concat(local.common_tags, ["beaconexplorer"])
-
-  labels = {
-    dedicated  = "beaconexplorer"
-  }
-  taint {
-    key    = "dedicated"
-    value  = "beaconexplorer"
-    effect = "NoSchedule"
-  }
-}
-
-# Dedicated pool of nodes for the blockscout explorer
-resource "digitalocean_kubernetes_node_pool" "blockscout" {
-  cluster_id = digitalocean_kubernetes_cluster.main.id
-  name       = "${local.cluster_name}-blockscout"
-  #size       = "so-2vcpu-16gb"    # $125/month (300GB NVMe)
-  size       = "so1_5-2vcpu-16gb" # $155/month (450GB NVMe)
-  node_count = 1
-  tags       = concat(local.common_tags, ["blockscout"])
-
-  labels = {
-    dedicated  = "blockscout"
-  }
-  taint {
-    key    = "dedicated"
-    value  = "blockscout"
-    effect = "NoSchedule"
-  }
-}
-
-# Dedicated pool of nodes for prometheus
-resource "digitalocean_kubernetes_node_pool" "prometheus" {
-  cluster_id = digitalocean_kubernetes_cluster.main.id
-  name       = "${local.cluster_name}-prometheus"
-  size       = "m3-4vcpu-32gb" # $195/month (100GB SSD)
-  node_count = 1
-  tags       = concat(local.common_tags, ["prometheus"])
-
-  labels = {
-    dedicated  = "prometheus"
-  }
-  taint {
-    key    = "dedicated"
-    value  = "prometheus"
-    effect = "NoSchedule"
-  }
 }

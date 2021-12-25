@@ -7,7 +7,7 @@ on:
         required: true
 
 jobs:
-  terraform-plan:
+  terraform-destroy:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.github_action_environment }}
     defaults:
@@ -29,7 +29,7 @@ jobs:
           tf_actions_comment: true
           tf_actions_working_dir: "public-merge-kintsugi/terraform/env/${{ github.event.inputs.github_action_environment }}"
 
-      - name: Terraform Destory
+      - name: Terraform Destroy
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: 0.15.4
