@@ -1,7 +1,7 @@
 region                           = "ams3"
 cluster_name                     = "develop-eth-k8s-merge-kintsugi-1"
 digitalocean_kubernetes_versions = "1.21.5"
-digitalocean_domain              = "kintsugi.themerge.dev"
+digitalocean_domain              = "abdul-kintsugi.themerge.dev"
 digitalocean_vpc_ip_range        = "10.120.0.0/16"
 # list available options with `doctl compute size list`
 kubernetes_cluster_main_values = {
@@ -50,7 +50,7 @@ kubernetes_node_pools = [
     labels = {
       dedicated = "clients"
     }
-    node_count = 15
+    node_count = 1
     taint = {
       key    = "dedicated"
       value  = "clients"
