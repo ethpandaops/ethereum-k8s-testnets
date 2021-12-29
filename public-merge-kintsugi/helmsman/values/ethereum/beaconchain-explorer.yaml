@@ -1,6 +1,6 @@
 image:
-  repository: skylenet/eth2-beaconchain-explorer
-  tag: merge-devnet3-v2
+  repository: parithoshj/beacon-explorer
+  tag: rebase
   pullPolicy: IfNotPresent
 
 config:
@@ -11,6 +11,7 @@ config:
     secondsPerSlot: $SECONDS_PER_SLOT
     genesisTimestamp: $GENESIS_TIME
     minGenesisActiveValidatorCount: $MIN_GENESIS_ACTIVE_VALIDATOR_COUNT
+    altairForkEpoch: $ALTAIR_FORK_EPOCH
   indexer:
     node:
       host: "lighthouse-geth-0.lighthouse-geth-headless.ethereum.svc.cluster.local"
@@ -43,7 +44,7 @@ initContainers:
       runAsUser: 0
     command:
     - bash
-    - -ace
+    - -acex
     - >
       apk add jq curl gettext;
       PHASE0_ENDPOINT=https://config.kintsugi.themerge.dev/cl/genesis/config.yaml;
@@ -60,6 +61,7 @@ initContainers:
       export MIN_GENESIS_ACTIVE_VALIDATOR_COUNT=$(cat config_spec.yaml | jq -r '.data.MIN_GENESIS_ACTIVE_VALIDATOR_COUNT' );
       export SECONDS_PER_SLOT=$(cat config_spec.yaml | jq -r '.data.SECONDS_PER_SLOT' );
       export SLOTS_PER_EPOCH=$(cat config_spec.yaml | jq -r '.data.SLOTS_PER_EPOCH' );
+      export ALTAIR_FORK_EPOCH=$(cat config_spec.yaml | jq -r '.data.ALTAIR_FORK_EPOCH' );
       echo "got genesis time: $GENESIS_TIME";
       envsubst < /config.yaml > /config-update/config.yaml;
       cat /config.yaml;
