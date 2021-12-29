@@ -1,10 +1,11 @@
 image:
   repository: skylenet/fauceth
-  tag: "1.2"
+  tag: "bc98a54"
   pullPolicy: IfNotPresent
 
 secretEnv:
-  APP_AMOUNT: "11000000000000000000" # 11 ETH
+  APP_AMOUNT: "10710000000000000000" # 10.71 ETH
   APP_IMAGEURL: "https://github.com/parithosh/testnet-faucet/raw/master/public/assets/images/ethereum-merge.png"
   APP_TITLE: "Kintsugi FaucETH"
-  CHAIN_RPC: "http://dshackle:8545/eth"
+  APP_LOGGING: "VERBOSE"
+  CHAIN_RPC: "http://geth-lighthouse-2:8545"
