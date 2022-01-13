@@ -1,6 +1,6 @@
 image:
   repository: consensys/teku
-  tag: develop@sha256:85d693dbd7a7edd8e2d2890701805ed5a8b0da0b48482f6e88a11b77cc6372e9
+  tag: develop@sha256:bb94c621d75b4a1b64ef4e9226a1c9890bb312cdd3e154f52e87ae1a1077141e
   pullPolicy: IfNotPresent
 
 p2pNodePort:
