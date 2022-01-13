@@ -6,6 +6,7 @@ settings:
 helmRepos:
   jetstack: https://charts.jetstack.io
   prometheus-community: https://prometheus-community.github.io/helm-charts
+  metrics-server: https://kubernetes-sigs.github.io/metrics-server/
   ebrianne: https://ebrianne.github.io/helm-charts
   ingress-nginx: https://kubernetes.github.io/ingress-nginx
   bitnami: https://charts.bitnami.com/bitnami
@@ -32,6 +33,12 @@ apps:
     valuesFiles:
       - values/shared-services/kube-prometheus-stack.yaml
     wait: true
+  # Metrics server
+  metrics-server:
+    namespace: shared-services
+    enabled: true
+    chart: "metrics-server/metrics-server"
+    version: "3.7.0"
   # Cert manager
   cert-manager:
     namespace: shared-services
