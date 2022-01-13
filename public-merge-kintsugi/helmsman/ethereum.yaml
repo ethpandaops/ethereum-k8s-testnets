@@ -91,6 +91,7 @@ apps:
     <<: *lighthouse
     set:
       replicas: 1
+      persistence.size: 200Gi
       p2pNodePort.startAt: 31130
       extraEnv[0].value: "geth-lighthouse-archive"
 

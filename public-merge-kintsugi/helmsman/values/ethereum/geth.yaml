@@ -1,6 +1,6 @@
 image:
   repository: parithoshj/geth
-  tag: merge-d99ac5a
+  tag: merge-f72c361
   pullPolicy: IfNotPresent
 
 replicas: 1
@@ -21,7 +21,7 @@ extraArgs:
 
 initContainers:
 - name: init-genesis
-  image: parithoshj/geth:merge-d99ac5a
+  image: parithoshj/geth:merge-f72c361
   imagePullPolicy: IfNotPresent
   securityContext:
     runAsNonRoot: false

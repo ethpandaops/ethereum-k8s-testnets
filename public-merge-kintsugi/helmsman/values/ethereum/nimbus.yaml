@@ -1,6 +1,6 @@
 image:
   repository: parithoshj/nimbus
-  tag: merge-e623091
+  tag: merge-d5c48e1
   pullPolicy: IfNotPresent
 
 defaultBinaryPath: /home/user/nimbus-eth2/build/beacon_node
