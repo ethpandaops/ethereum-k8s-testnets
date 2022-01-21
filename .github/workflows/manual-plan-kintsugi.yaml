@@ -1,0 +1,39 @@
+name: Manual - Terraform Plan Kintsugi
+on:
+  workflow_dispatch:
+    inputs:
+      github_action_environment:
+        description: "The environment to deploy to"
+        required: true
+
+jobs:
+  terraform-plan:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.github_action_environment }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      DIGITALOCEAN_ACCESS_TOKEN: ${{secrets.DIGITALOCEAN_ACCESS_TOKEN}}
+      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+      AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Terraform Init
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.15.4
+          tf_actions_subcommand: "init"
+          tf_actions_comment: true
+          tf_actions_working_dir: "public-merge-kintsugi/terraform/env/${{ github.event.inputs.github_action_environment }}"
+
+      - name: Terraform Apply
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.15.4
+          tf_actions_subcommand: "apply"
+          tf_actions_working_dir: "public-merge-kintsugi/terraform/env/${{ github.event.inputs.github_action_environment }}"
+          tf_actions_comment: true
+          args: "--var-file=${{ github.event.inputs.github_action_environment }}.tfvars --var do_token=${{env.DIGITALOCEAN_ACCESS_TOKEN}}"

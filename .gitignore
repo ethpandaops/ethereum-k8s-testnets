@@ -1,8 +1,9 @@
 # Terraform
 .terraform
-.terraform.lock.hcl
+*.hcl
 *.tfstate
 *.tfstate.*
 
 # Helmsman
 .helmsman-tmp
+garbage.txt
