@@ -1,6 +1,6 @@
 image:
   repository: parithoshj/nimbus
-  tag: merge-d5c48e1
+  tag: merge-1a94c59
   pullPolicy: IfNotPresent
 
 defaultBinaryPath: /home/user/nimbus-eth2/build/beacon_node
@@ -25,7 +25,7 @@ extraArgs:
   - --graffiti=$(hostname | cut -c -32)
   - --doppelganger-detection=false
   - --terminal-total-difficulty-override=5000000000
-  - --log-level="DEBUG;DEBUG:discv5,libp2p;REQUIRED:none;DISABLED:none"
+  #- --log-level="DEBUG;DEBUG:discv5,libp2p;REQUIRED:none;DISABLED:none"
 initContainers:
 - name: init-genesis
   image: alpine:latest

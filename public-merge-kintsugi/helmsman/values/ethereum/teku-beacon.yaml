@@ -1,6 +1,6 @@
 image:
   repository: consensys/teku
-  tag: develop@sha256:bb94c621d75b4a1b64ef4e9226a1c9890bb312cdd3e154f52e87ae1a1077141e
+  tag: develop@sha256:1c98d685cd4136ad1acd861c0e592480746734c36ee9378bbdd30dc5f53f1b93
   pullPolicy: IfNotPresent
 
 p2pNodePort:
@@ -23,7 +23,7 @@ extraArgs:
   - --eth1-endpoint="http://${SERVICE_PREFIX}-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev):8545"
   - --Xee-endpoint="http://${SERVICE_PREFIX}-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev):8545"
   - --data-storage-non-canonical-blocks-enabled=true
-  - --Xnetwork-merge-total-terminal-difficulty-override=5000000000
+  #- --Xnetwork-merge-total-terminal-difficulty-override=5000000000
   - --logging=INFO
 initContainers:
 - name: init-genesis
