@@ -104,7 +104,7 @@ resource "digitalocean_kubernetes_node_pool" "clients" {
   cluster_id = digitalocean_kubernetes_cluster.main.id
   name       = "${local.cluster_name}-clients"
   size       = "s-4vcpu-8gb-amd" # $48/month
-  node_count  = 15
+  node_count  = 30
   tags       = concat(local.common_tags, ["clients"])
 
   labels = {

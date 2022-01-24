@@ -1,6 +1,6 @@
 image:
   repository: chainsafe/lodestar
-  tag: next@sha256:7ad6b4d1f3f4f67982c3dae98b07e6dd1c9f5f3ef156a47bfde10aff06ba74bf
+  tag: next@sha256:edfd93143e7ade7cdff4d7aca932934fa6f7060047aed5e6bae7e540f752ac7a
   pullPolicy: IfNotPresent
 
 p2pNodePort:
