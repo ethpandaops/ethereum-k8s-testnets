@@ -1,0 +1,64 @@
+image:
+  repository: suburbandad/besu
+  tag: kintsugi-v3
+  pullPolicy: IfNotPresent
+
+replicas: 1
+
+p2pNodePort:
+  enabled: true
+
+podManagementPolicy: Parallel
+
+extraArgs:
+- --genesis-file=/data/genesis.json
+- --bootnodes="$(cat /data/bootnode.txt)"
+- --network-id=$(cat /data/chainid.txt)
+- --ethstats=$(hostname):KintsugiNetwork@ethstats:3000
+- --Xmerge-support=true
+- --rpc-http-api=ADMIN,CLIQUE,MINER,ETH,NET,DEBUG,TXPOOL,EXECUTION
+- --rpc-ws-api=ADMIN,CLIQUE,MINER,ETH,NET,DEBUG,TXPOOL,EXECUTION
+- --miner-coinbase="0x240B397Cfc2431935FdBA6cdDa3df6d8CCDB27c1"
+#- --logging=TRACE
+
+initContainers:
+- name: init-genesis
+  image: alpine:latest
+  imagePullPolicy: IfNotPresent
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+  command:
+    - sh
+    - -ace
+    - >
+      BOOTNODE=enode://6f377dd1ef5a3272d7e02fac9064c4f95d74f7edfd866e59ded774ee5b4649ff61c3f24c95f5c3d07d692b447f0569716b8921b6861810b96a705c92e1d27ff9@161.35.67.219:30303;
+      GENESIS_URI=https://raw.githubusercontent.com/parithosh/consensus-deployment-ansible/master/kintsugi-testnet/custom_config_data/besu_genesis.json;
+      if ! [ -f /data/genesis_init_done ];
+      then
+        wget -O /data/genesis.json $GENESIS_URI;
+        apk update && apk add jq;
+        cat /data/genesis.json | jq -r '.config.chainId' > /data/chainid.txt;
+        touch /data/genesis_init_done;
+        echo "genesis init done";
+      else
+        echo "genesis is already initialized";
+      fi;
+      echo $BOOTNODE > /data/bootnode.txt;
+      echo "bootnode init done: $(cat /data/bootnode.txt)";
+  volumeMounts:
+    - name: storage
+      mountPath: "/data"
+
+extraEnv:
+- name: JAVA_OPTS
+  value: "-Xmx2000m -Xms2000m"
+
+persistence:
+  enabled: true
+  size: 50Gi
+
+resources: {}
+
+serviceMonitor:
+  enabled: true

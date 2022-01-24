@@ -359,6 +359,14 @@ initContainers:
         " >> /config-update/config.toml;
       done;
 
+      for i in {0..1}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://lighthouse-besu-$i.lighthouse-besu-headless.ethereum.svc.cluster.local:5052'
+        execution = 'Besu ($i)'
+        " >> /config-update/config.toml;
+      done;
+
       for i in {0..4}; do
         echo "
         [[monitor.endpoints]]
@@ -388,6 +396,14 @@ initContainers:
         [[monitor.endpoints]]
         consensus = 'http://teku-nethermind-$i.teku-nethermind-headless.ethereum.svc.cluster.local:5051'
         execution = 'Nethermind ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..1}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://teku-besu-$i.teku-besu-headless.ethereum.svc.cluster.local:5051'
+        execution = 'Besu ($i)'
         " >> /config-update/config.toml;
       done;
 

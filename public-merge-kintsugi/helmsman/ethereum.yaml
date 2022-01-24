@@ -35,6 +35,13 @@ appsTemplates:
     valuesFiles:
       - values/ethereum/nethermind.yaml
       - values/ethereum/tolerations/clients.yaml
+  besu: &besu
+    chart: "ethereum-helm-charts/besu"
+    version: "0.2.0"
+    group: besu
+    valuesFiles:
+      - values/ethereum/besu.yaml
+      - values/ethereum/tolerations/clients.yaml
   lighthouse: &lighthouse
     chart: "ethereum-helm-charts/lighthouse"
     version: "0.1.0"
@@ -127,6 +134,18 @@ apps:
       extraEnv[0].value: "nethermind-lighthouse"
 
   #
+  # Lighthouse/Besu
+  #
+  besu-lighthouse-0: {<<: *common, <<: *besu, set: {p2pNodePort.port: 30200}}
+  besu-lighthouse-1: {<<: *common, <<: *besu, set: {p2pNodePort.port: 30201}}
+  lighthouse-besu:
+    <<: *common
+    <<: *lighthouse
+    set:
+      replicas: 2
+      p2pNodePort.startAt: 31200
+      extraEnv[0].value: "besu-lighthouse"
+  #
   # Lodestar/Geth
   #
   geth-lodestar-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30240}}
@@ -183,6 +202,18 @@ apps:
       replicas: 2
       p2pNodePort.startAt: 31340
       extraEnv[0].value: "nethermind-teku"
+
+  #
+  # Teku/Besu
+  #
+  besu-teku-0: {<<: *common, <<: *besu, set: {p2pNodePort.port: 30360}}
+  teku-besu:
+    <<: *common
+    <<: *teku
+    set:
+      replicas: 1
+      p2pNodePort.startAt: 31360
+      extraEnv[0].value: "besu-teku"
 
   #
   # Nimbus/Geth
