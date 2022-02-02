@@ -1,0 +1,123 @@
+image:
+  repository: sigp/lighthouse
+  tag: latest-unstable@sha256:cc74062f63fe705c3948764df74adfdc00b37d30c838406c0b3bc63bc8208355
+  pullPolicy: IfNotPresent
+
+podManagementPolicy: Parallel
+
+mode: "validator"
+
+extraEnv:
+  - name: "SERVICE_PREFIX"
+    value: "" # Will be overwritten via `-set` on main helmsman file
+
+extraArgs:
+  - --testnet-dir=/data/testnet_spec
+  - --secrets-dir=/data/validator/secrets
+  - --validators-dir=/data/validator/keys
+  - --graffiti=$(hostname | cut -c -32)
+  - --init-slashing-protection
+  - "--beacon-nodes=\"\
+    http://$SERVICE_PREFIX-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev).$SERVICE_PREFIX-headless.ethereum.svc.cluster.local:5052\
+    \""
+
+initContainers:
+# Important: Keep the init-keys container as the first element of the list
+#            due to the usage of -set initContainers[0].env[0].value=...
+- name: init-keys
+  image: skylenet/ethereum-genesis-generator:goerli
+  imagePullPolicy: IfNotPresent
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+  command:
+    - bash
+    - -ace
+    - >
+      if [ -n "$(ls -A /data/validator/keys 2>/dev/null)" ];
+      then
+        echo "keys already exist. skipping...";
+        exit 0;
+      fi;
+      export INDEX=$(echo $(hostname)| rev | cut -d'-' -f 1 | rev);
+      export S_MIN=$(( (INDEX+SKIP_INDEX)   * COUNT ));
+      export S_MAX=$(( (INDEX+SKIP_INDEX+1) * COUNT ));
+      mkdir -p /data/validator/keys;
+      mkdir -p /data/validator/secrets;
+      echo "generating keys for node $INDEX. range $S_MIN to $S_MAX";
+      eth2-val-tools keystores --source-mnemonic="$MNEMONIC" --source-min=$S_MIN --source-max=$S_MAX --prysm-pass Pass123word --insecure --out-loc assigned_data;
+      mv assigned_data/keys/* /data/validator/keys/;
+      mv assigned_data/secrets/* /data/validator/secrets/;
+      echo "finished generating and importing keys";
+  volumeMounts:
+    - name: storage
+      mountPath: "/data"
+  env:
+    # Important: Keep "MNEMONIC" as the first env var.
+    #            due to the usage of -set initContainers[0].env[0].value=...
+    - name: MNEMONIC
+      value: ""
+    - name: COUNT
+      value: "100"
+    - name: SKIP_INDEX
+      value: "0"
+
+- name: init-genesis
+  image: alpine:latest
+  imagePullPolicy: IfNotPresent
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+  command:
+    - sh
+    - -ace
+    - >
+      BOOTNODE="enr:-Iq4QKuNB_wHmWon7hv5HntHiSsyE1a6cUTK1aT7xDSU_hNTLW3R4mowUboCsqYoh1kN9v3ZoSu_WuvW9Aw0tQ0Dxv6GAXxQ7Nv5gmlkgnY0gmlwhLKAlv6Jc2VjcDI1NmsxoQK6S-Cii_KmfFdUJL2TANL3ksaKUnNXvTCv1tLwXs0QgIN1ZHCCIyk";
+
+      mkdir -p /data/testnet_spec;
+      if ! [ -f /data/testnet_spec/genesis.ssz ];
+      then
+        echo "waiting for genesis provider";
+        while ! wget -T 5 -c http://genesis-generator:8000/cl/; do sleep 10; done;
+        wget -O /data/testnet_spec/deposit_contract.txt http://genesis-generator:8000/cl/deposit_contract.txt;
+        wget -O /data/testnet_spec/deploy_block.txt http://genesis-generator:8000/cl/deploy_block.txt;
+        wget -O /data/testnet_spec/config.yaml http://genesis-generator:8000/cl/config.yaml;
+        wget -O /data/testnet_spec/genesis.ssz http://genesis-generator:8000/cl/genesis.ssz;
+        echo "genesis init done";
+      else
+        echo "genesis exists. skipping...";
+      fi;
+      echo $BOOTNODE > /data/testnet_spec/bootstrap_nodes.txt;
+      echo "bootnode init done: $(cat /data/testnet_spec/bootstrap_nodes.txt)";
+  volumeMounts:
+    - name: storage
+      mountPath: "/data"
+
+- name: init-beacon-wait
+  image: alpine:latest
+  imagePullPolicy: IfNotPresent
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+  env:
+  # Important: Keep "SERVICE_PREFIX" as the first env var.
+  #            due to the usage of -set initContainers[2].env[0].value=...
+  - name: "SERVICE_PREFIX"
+    value: "" # Will be overwritten via `-set` on main helmsman file
+  command:
+    - sh
+    - -ace
+    - >
+      HEALTH_API="http://$SERVICE_PREFIX-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev).$SERVICE_PREFIX-headless.ethereum.svc.cluster.local:5052/eth/v1/node/health";
+      echo "waiting for beacon node to be available on $HEALTH_API";
+      while ! wget $HEALTH_API; do sleep 10; done;
+      echo "beacon node is available"
+
+persistence:
+  enabled: true
+  size: 10Gi
+
+resources: {}
+
+serviceMonitor:
+  enabled: true

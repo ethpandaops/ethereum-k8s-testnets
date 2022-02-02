@@ -1,0 +1,96 @@
+image:
+  repository: parithoshj/geth
+  tag: merge-89272c8
+  pullPolicy: IfNotPresent
+
+replicas: 1
+
+p2pNodePort:
+  enabled: true
+
+podManagementPolicy: Parallel
+
+extraArgs:
+- --catalyst
+- >-
+  --bootnodes="
+  enode://011f758e6552d105183b1761c5e2dea0111bc20fd5f6422bc7f91e0fabbec9a6595caf6239b37feb773dddd3f87240d99d859431891e4a642cf2a0a9e6cbb98a@51.141.78.53:30303,
+  enode://176b9417f511d05b6b2cf3e34b756cf0a7096b3094572a8f6ef4cdcb9d1f9d00683bf0f83347eebdf3b81c3521c2332086d9592802230bf528eaf606a1d9677b@13.93.54.137:30303,
+  enode://46add44b9f13965f7b9875ac6b85f016f341012d84f975377573800a863526f4da19ae2c620ec73d11591fa9510e992ecc03ad0751f53cc02f7c7ed6d55c7291@94.237.54.114:30313,
+  enode://b5948a2d3e9d486c4d75bf32713221c2bd6cf86463302339299bd227dc2e276cd5a1c7ca4f43a0e9122fe9af884efed563bd2a1fd28661f3b5f5ad7bf1de5949@18.218.250.66:30303,
+  enode://a61215641fb8714a373c80edbfa0ea8878243193f57c96eeb44d0bc019ef295abd4e044fd619bfc4c59731a73fb79afe84e9ab6da0c743ceb479cbb6d263fa91@3.11.147.67:30303
+  "
+- --networkid=$(cat /data/chainid.txt)
+- --ethstats=$(hostname):ShadowGoerliNetwork@ethstats:3000
+- --ws.api="eth,net,engine"
+- --http.api="eth,net,engine"
+#- --verbosity=5
+
+initContainers:
+# Important: Keep the init-data-snapshot container as the second element of the list
+#            due to the usage of -set initContainers[0].env[0].value=...
+- name: init-data-snapshot
+  image: amazon/aws-cli
+  imagePullPolicy: IfNotPresent
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+  env:
+    - name: AWS_ACCESS_KEY_ID
+      value: "" #injected via -set
+    - name: AWS_SECRET_ACCESS_KEY
+      value: "" #injected via -set
+  command:
+    - sh
+    - -ace
+    - >
+      if ! [ -f /data/snapshot_init_done ];
+      then
+        yum update;
+        yum install -y tar;
+        mkdir -p /data/geth/chaindata;
+        cd /data/geth/chaindata;
+        aws s3 cp s3://ethdevops-data-snapshots/geth-goerli.tar --region eu-central-1 --endpoint-url https://s3-accelerate.amazonaws.com - | tar -xv;
+        touch /data/snapshot_init_done;
+        echo "data snapshot init done";
+      else
+        echo "data snapshot was already imported once. skipping..."
+      fi;
+  volumeMounts:
+    - name: storage
+      mountPath: "/data"
+- name: init-genesis
+  image: parithoshj/geth:merge-89272c8
+  imagePullPolicy: IfNotPresent
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+  command:
+    - sh
+    - -ace
+    - >
+      if ! [ -f /data/genesis_init_done ];
+      then
+        echo "waiting for genesis provider";
+        while ! wget -T 5 -c http://genesis-generator:8000/el/; do sleep 10; done;
+        wget -O /data/genesis.json http://genesis-generator:8000/el/geth.json;
+        apk update && apk add jq;
+        cat /data/genesis.json | jq -r '.config.chainId' > /data/chainid.txt;
+        geth init --datadir /data /data/genesis.json;
+        touch /data/genesis_init_done;
+        echo "genesis init done";
+      else
+        echo "genesis is already initialized";
+      fi;
+  volumeMounts:
+    - name: storage
+      mountPath: "/data"
+
+persistence:
+  enabled: true
+  size: 100Gi
+
+resources: {}
+
+serviceMonitor:
+  enabled: true

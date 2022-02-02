@@ -1,0 +1,70 @@
+image:
+  repository: ralexstokes/ethereum_consensus_monitor
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# ENV vars will be replaced using the 'init-config' init container
+config: |
+  [network]
+  name = "kintsugi"
+  etherscan_api_key = "some-etherscan-api-key"
+
+  [consensus_chain]
+  seconds_per_slot = 12
+  slots_per_epoch = 32
+  genesis_time = $GENESIS_TIME
+
+  [weak_subjectivity]
+  provider_endpoint = "http://eth2-ws-provider_eth2_ws_server_1:80"
+
+  [monitor]
+  output_dir = "public"
+  port = 8080
+
+customArgs:
+  - --config-path=/config-update/config.toml
+
+extraVolumes:
+  - name: config-update
+    emptyDir: {}
+
+extraVolumeMounts:
+  - name: config-update
+    mountPath: "/config-update"
+
+initContainers:
+  - name: init-config
+    image: bash:latest
+    imagePullPolicy: IfNotPresent
+    securityContext:
+      runAsNonRoot: false
+      runAsUser: 0
+    command:
+    - bash
+    - -c
+    - >
+      apk add jq curl gettext;
+      BEACON_API_ENDPOINT=http://lighthouse-beacon-geth:5052/eth/v1/beacon/genesis;
+      echo "waiting to fetch beacon info from $BEACON_API_ENDPOINT";
+      while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $BEACON_API_ENDPOINT)" != "200" ]]; do sleep 5; done;
+      export GENESIS_TIME=$(curl -s $BEACON_API_ENDPOINT | jq -r '.data.genesis_time');
+      echo "got genesis time: $GENESIS_TIME";
+      envsubst < /config.toml > /config-update/config.toml;
+
+      for i in {0..1}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://lighthouse-beacon-geth-$i.lighthouse-beacon-geth-headless.ethereum.svc.cluster.local:5052'
+        execution = 'Geth ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      cat /config-update/config.toml;
+
+    volumeMounts:
+      - name: config-update
+        mountPath: /config-update
+      - name: config
+        mountPath: "/config.toml"
+        subPath: config.toml
+        readOnly: true

@@ -1,0 +1,22 @@
+controller:
+  replicaCount: 3
+  minAvailable: 1
+  extraArgs:
+    default-ssl-certificate: "shared-services/default-cert"
+  config:
+    use-forwarded-headers: "true"
+    compute-full-forwarded-for: "true"
+    use-proxy-protocol: "true"
+  service:
+    annotations:
+      service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
+      # Required to deal with Proxy Protocol from internal services/pods
+      # More details in: https://github.com/kubernetes/ingress-nginx/issues/3996
+      service.beta.kubernetes.io/do-loadbalancer-hostname: "lb.shadowgoerli.themerge.dev"
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+
+defaultBackend:
+  enabled: true
