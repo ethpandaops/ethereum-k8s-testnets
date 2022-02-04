@@ -305,7 +305,7 @@ apps:
   fauceth:
     <<: *common
     chart: "ethereum-helm-charts/fauceth"
-    version: "0.1.0"
+    version: "0.2.1"
     valuesFiles:
       - values/ethereum/fauceth.yaml
     setString:
