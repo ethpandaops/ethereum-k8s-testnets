@@ -86,7 +86,6 @@ apps:
     <<: *common
     <<: *validators
     <<: *lighthouse-validator
-    enabled: false
     set:
       replicas: 2
       extraEnv[0].value: "lighthouse-beacon-geth"

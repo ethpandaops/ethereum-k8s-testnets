@@ -5,21 +5,34 @@ image:
 
 podManagementPolicy: Parallel
 
-mode: "validator"
+mode: validator
 
 extraEnv:
   - name: "SERVICE_PREFIX"
     value: "" # Will be overwritten via `-set` on main helmsman file
 
 extraArgs:
+  - --datadir=/data
   - --testnet-dir=/data/testnet_spec
-  - --secrets-dir=/data/validator/secrets
-  - --validators-dir=/data/validator/keys
+  #- --secrets-dir=/data/secrets
+  #- --validators-dir=/data/validators
   - --graffiti=$(hostname | cut -c -32)
   - --init-slashing-protection
   - "--beacon-nodes=\"\
     http://$SERVICE_PREFIX-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev).$SERVICE_PREFIX-headless.ethereum.svc.cluster.local:5052\
     \""
+
+livenessProbe:
+  tcpSocket: null
+  httpGet:
+    path: /metrics
+    port: 5054
+
+readinessProbe:
+  tcpSocket: null
+  httpGet:
+    path: /metrics
+    port: 5054
 
 initContainers:
 # Important: Keep the init-keys container as the first element of the list
@@ -34,7 +47,7 @@ initContainers:
     - bash
     - -ace
     - >
-      if [ -n "$(ls -A /data/validator/keys 2>/dev/null)" ];
+      if [ -n "$(ls -A /data/validators 2>/dev/null)" ];
       then
         echo "keys already exist. skipping...";
         exit 0;
@@ -42,12 +55,12 @@ initContainers:
       export INDEX=$(echo $(hostname)| rev | cut -d'-' -f 1 | rev);
       export S_MIN=$(( (INDEX+SKIP_INDEX)   * COUNT ));
       export S_MAX=$(( (INDEX+SKIP_INDEX+1) * COUNT ));
-      mkdir -p /data/validator/keys;
-      mkdir -p /data/validator/secrets;
+      mkdir -p /data/validators;
+      mkdir -p /data/secrets;
       echo "generating keys for node $INDEX. range $S_MIN to $S_MAX";
       eth2-val-tools keystores --source-mnemonic="$MNEMONIC" --source-min=$S_MIN --source-max=$S_MAX --prysm-pass Pass123word --insecure --out-loc assigned_data;
-      mv assigned_data/keys/* /data/validator/keys/;
-      mv assigned_data/secrets/* /data/validator/secrets/;
+      mv assigned_data/keys/* /data/validators/;
+      mv assigned_data/secrets/* /data/secrets/;
       echo "finished generating and importing keys";
   volumeMounts:
     - name: storage
