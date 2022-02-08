@@ -1,0 +1,8 @@
+name: "my-pvc"
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi

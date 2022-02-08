@@ -1,0 +1,4 @@
+apiVersion: v1
+description: All ingress resource definitions
+name: generic-pvc
+version: 0.0.1
