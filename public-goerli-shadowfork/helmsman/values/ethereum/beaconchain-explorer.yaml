@@ -1,6 +1,6 @@
 image:
-  repository: parithoshj/beacon-explorer
-  tag: rebase
+  repository: skylenet/eth2-beaconchain-explorer
+  tag: merge-devnet3-v2
   pullPolicy: IfNotPresent
 
 config:

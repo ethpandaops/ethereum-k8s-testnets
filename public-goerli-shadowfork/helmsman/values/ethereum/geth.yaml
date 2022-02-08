@@ -27,30 +27,21 @@ extraArgs:
 #- --verbosity=5
 
 initContainers:
-# Important: Keep the init-data-snapshot container as the second element of the list
-#            due to the usage of -set initContainers[0].env[0].value=...
 - name: init-data-snapshot
-  image: amazon/aws-cli
+  image: parithoshj/geth:merge-89272c8
   imagePullPolicy: IfNotPresent
   securityContext:
     runAsNonRoot: false
     runAsUser: 0
-  env:
-    - name: AWS_ACCESS_KEY_ID
-      value: "" #injected via -set
-    - name: AWS_SECRET_ACCESS_KEY
-      value: "" #injected via -set
   command:
     - sh
     - -ace
     - >
       if ! [ -f /data/snapshot_init_done ];
       then
-        yum update;
-        yum install -y tar;
         mkdir -p /data/geth/chaindata;
         cd /data/geth/chaindata;
-        aws s3 cp s3://ethdevops-data-snapshots/geth-goerli.tar --region eu-central-1 --endpoint-url https://s3-accelerate.amazonaws.com - | tar -xv;
+        wget -c http://fileserver-nginx.shared-services.svc.cluster.local/geth-goerli.tar -O - | tar -xv;
         touch /data/snapshot_init_done;
         echo "data snapshot init done";
       else

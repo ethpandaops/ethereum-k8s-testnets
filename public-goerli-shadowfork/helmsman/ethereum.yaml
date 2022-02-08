@@ -25,10 +25,6 @@ appsTemplates:
     valuesFiles:
       - values/ethereum/geth.yaml
       - values/ethereum/tolerations/clients.yaml
-    setString:
-      # To download data snapshots from the S3 bucket (See init container in the geth values file)
-      initContainers[0].env[0].value: "$SNAPSHOT_AWS_ACCESS_KEY_ID"
-      initContainers[0].env[1].value: "$SNAPSHOT_AWS_SECRET_ACCESS_KEY"
   lighthouse-beacon: &lighthouse-beacon
     chart: "ethereum-helm-charts/lighthouse"
     version: "0.1.0"
@@ -74,12 +70,11 @@ apps:
   # Lighthouse/Geth
   #
   geth-lighthouse-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30140}}
-  geth-lighthouse-1: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30141}}
   lighthouse-beacon-geth:
     <<: *common
     <<: *lighthouse-beacon
     set:
-      replicas: 2
+      replicas: 1
       p2pNodePort.startAt: 31140
       extraEnv[0].value: "geth-lighthouse"
   lighthouse-validator-geth:
@@ -87,9 +82,9 @@ apps:
     <<: *validators
     <<: *lighthouse-validator
     set:
-      replicas: 2
+      replicas: 1
       extraEnv[0].value: "lighthouse-beacon-geth"
-      initContainers[2].env[0].value: "lighthouse-beacon-geth"
+      #initContainers[2].env[0].value: "lighthouse-beacon-geth"
   #
   # Tooling
   #

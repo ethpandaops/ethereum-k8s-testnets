@@ -1,6 +1,6 @@
 image:
   repository: skylenet/ethereum-genesis-generator
-  tag: goerli
+  tag: goerli@sha256:3058cc7b6059d50ed73de3a1b10bc9951348e2331312cff115ffa08132b975df
   pullPolicy: IfNotPresent
 
 config:
@@ -23,10 +23,10 @@ config:
       # `2**14` (= 16,384)
       MIN_GENESIS_ACTIVE_VALIDATOR_COUNT: 190
       # Mar-01-2021 08:53:32 AM +UTC
-      # This is an invalid valid and should be updated when you create the genesis
+      # This is invalid but will be updated automatically by the genesis generator
       MIN_GENESIS_TIME: 0
       GENESIS_FORK_VERSION: 0x13001021
-      GENESIS_DELAY: 4800
+      GENESIS_DELAY: 3600 # 60min
 
 
       # Forking
@@ -37,10 +37,10 @@ config:
 
       # Altair
       ALTAIR_FORK_VERSION: 0x01001021
-      ALTAIR_FORK_EPOCH: 5
+      ALTAIR_FORK_EPOCH: 2
       # Merge
       BELLATRIX_FORK_VERSION: 0x02001021
-      BELLATRIX_FORK_EPOCH: 10
+      BELLATRIX_FORK_EPOCH: 3
       TERMINAL_TOTAL_DIFFICULTY: 0
       TERMINAL_BLOCK_HASH: 0x0000000000000000000000000000000000000000000000000000000000000000
       TERMINAL_BLOCK_HASH_ACTIVATION_EPOCH: 18446744073709551615

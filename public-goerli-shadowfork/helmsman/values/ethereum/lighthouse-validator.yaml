@@ -71,7 +71,7 @@ initContainers:
     - name: MNEMONIC
       value: ""
     - name: COUNT
-      value: "100"
+      value: "200"
     - name: SKIP_INDEX
       value: "0"
 
@@ -105,26 +105,6 @@ initContainers:
   volumeMounts:
     - name: storage
       mountPath: "/data"
-
-- name: init-beacon-wait
-  image: alpine:latest
-  imagePullPolicy: IfNotPresent
-  securityContext:
-    runAsNonRoot: false
-    runAsUser: 0
-  env:
-  # Important: Keep "SERVICE_PREFIX" as the first env var.
-  #            due to the usage of -set initContainers[2].env[0].value=...
-  - name: "SERVICE_PREFIX"
-    value: "" # Will be overwritten via `-set` on main helmsman file
-  command:
-    - sh
-    - -ace
-    - >
-      HEALTH_API="http://$SERVICE_PREFIX-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev).$SERVICE_PREFIX-headless.ethereum.svc.cluster.local:5052/eth/v1/node/health";
-      echo "waiting for beacon node to be available on $HEALTH_API";
-      while ! wget $HEALTH_API; do sleep 10; done;
-      echo "beacon node is available"
 
 persistence:
   enabled: true
