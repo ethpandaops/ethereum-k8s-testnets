@@ -79,3 +79,22 @@ apps:
     set:
       controller.service.annotations."external-dns\.alpha\.kubernetes\.io/hostname": >-
         ${DO_DNS_DOMAIN},*.${DO_DNS_DOMAIN}
+  # File server
+  fileserver-pvc:
+    namespace: shared-services
+    enabled: true
+    chart: "local-charts/generic-pvc"
+    version: "0.0.1"
+    valuesFiles:
+      - values/shared-services/fileserver-pvc.yaml
+  fileserver:
+    namespace: shared-services
+    enabled: true
+    chart: "bitnami/nginx"
+    version: "9.7.6"
+    valuesFiles:
+      - values/shared-services/fileserver.yaml
+    setString:
+      # To download data snapshots from the S3 bucket (See init container in the geth values file)
+      initContainers[0].env[0].value: "$SNAPSHOT_AWS_ACCESS_KEY_ID"
+      initContainers[0].env[1].value: "$SNAPSHOT_AWS_SECRET_ACCESS_KEY"
