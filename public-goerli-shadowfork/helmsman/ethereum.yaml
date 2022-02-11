@@ -56,7 +56,7 @@ apps:
   #
   genesis-generator:
     <<: *common
-    chart: "../../../ethereum-helm-charts/charts/genesis-generator"
+    chart: "ethereum-helm-charts/genesis-generator"
     version: "0.2.0"
     priority: -110
     valuesFiles:
