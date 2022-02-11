@@ -1,0 +1,132 @@
+context: ethereum
+
+settings:
+  kubeContext: do-ams3-eth-k8s-merge-shadowgoerli-ams3
+
+helmRepos:
+  ethereum-helm-charts: https://skylenet.github.io/ethereum-helm-charts
+
+namespaces:
+  ethereum:
+    protected: false
+
+appsTemplates:
+  common: &common
+    namespace: ethereum
+    enabled: true
+  validators: &validators
+    set:
+      initContainers[0].env[0].value: "$CONSENSUS_GENESIS_MNEMONIC"
+  geth: &geth
+    chart: "ethereum-helm-charts/geth"
+    version: "0.2.0"
+    group: geth
+    enabled: true
+    valuesFiles:
+      - values/ethereum/geth.yaml
+      - values/ethereum/tolerations/clients.yaml
+  lighthouse-beacon: &lighthouse-beacon
+    chart: "ethereum-helm-charts/lighthouse"
+    version: "0.1.0"
+    group: lighthouse
+    valuesFiles:
+      - values/ethereum/lighthouse-beacon.yaml
+      - values/ethereum/tolerations/clients.yaml
+  lighthouse-validator: &lighthouse-validator
+    chart: "ethereum-helm-charts/lighthouse"
+    version: "0.1.0"
+    group: lighthouse
+    valuesFiles:
+      - values/ethereum/lighthouse-validator.yaml
+      - values/ethereum/tolerations/clients.yaml
+
+apps:
+  #
+  # Ingress
+  #
+  ingress-definitions:
+    <<: *common
+    chart: "local-charts/ingress-definitions"
+    version: "0.0.1"
+    set:
+      domain: "$DO_DNS_DOMAIN"
+
+  #
+  # Genesis generator
+  #
+  genesis-generator:
+    <<: *common
+    chart: "ethereum-helm-charts/genesis-generator"
+    version: "0.2.0"
+    priority: -110
+    valuesFiles:
+      - values/ethereum/genesis-generator.yaml
+    setString:
+      secretEnv.EXECUTION_CHAIN_ID: "$EXECUTION_CHAIN_ID"
+    set:
+      secretEnv.CONSENSUS_GENESIS_MNEMONIC: "$CONSENSUS_GENESIS_MNEMONIC"
+
+  #
+  # Lighthouse/Geth
+  #
+  geth-lighthouse-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30140}}
+  lighthouse-beacon-geth:
+    <<: *common
+    <<: *lighthouse-beacon
+    set:
+      replicas: 1
+      p2pNodePort.startAt: 31140
+      extraEnv[0].value: "geth-lighthouse"
+  lighthouse-validator-geth:
+    <<: *common
+    <<: *validators
+    <<: *lighthouse-validator
+    set:
+      replicas: 1
+      extraEnv[0].value: "lighthouse-beacon-geth"
+      #initContainers[2].env[0].value: "lighthouse-beacon-geth"
+  #
+  # Tooling
+  #
+  ethstats:
+    <<: *common
+    chart: "ethereum-helm-charts/ethstats"
+    version: "0.1.0"
+    priority: -110
+    valuesFiles:
+      - values/ethereum/ethstats.yaml
+  consensus-monitor:
+    <<: *common
+    chart: "ethereum-helm-charts/consensus-monitor"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/consensus-monitor.yaml
+  rpc-proxy:
+    <<: *common
+    chart: "ethereum-helm-charts/rpc-proxy"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/rpc-proxy.yaml
+      - values/ethereum/tolerations/clients.yaml
+  beaconchain-explorer:
+    <<: *common
+    chart: "ethereum-helm-charts/beaconchain-explorer"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/beaconchain-explorer.yaml
+      - values/ethereum/tolerations/beaconexplorer.yaml
+  testnet-homepage:
+    <<: *common
+    chart: "ethereum-helm-charts/testnet-homepage"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/testnet-homepage.yaml
+    setString:
+      config.params.ethereum.chainName: "ShadowGoerli"
+      config.params.ethereum.chainId: "$EXECUTION_CHAIN_ID"
+      config.params.ethereum.ethstatsUrl: "https://ethstats.${DO_DNS_DOMAIN}"
+      config.params.ethereum.faucetUrl: "https://faucet.${DO_DNS_DOMAIN}"
+      config.params.ethereum.rpcUrl: "https://rpc.${DO_DNS_DOMAIN}"
+      config.params.ethereum.explorerUrl: "https://explorer.${DO_DNS_DOMAIN}"
+      config.params.ethereum.beaconexplorerUrl: "https://beaconchain.${DO_DNS_DOMAIN}"
+      config.params.ethereum.consensusmonitorUrl: "https://consensusmonitor.${DO_DNS_DOMAIN}"

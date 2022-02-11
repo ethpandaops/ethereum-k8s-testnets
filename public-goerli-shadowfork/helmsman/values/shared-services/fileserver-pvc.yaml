@@ -1,0 +1,8 @@
+name: "snapshot"
+spec:
+  storageClassName: "do-block-storage"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 80Gi

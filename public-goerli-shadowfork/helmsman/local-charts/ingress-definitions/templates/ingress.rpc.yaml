@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-rpc
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/preserve-trailing-slash: "true"
+    #nginx.ingress.kubernetes.io/rewrite-target: /eth
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/limit-rpm: "500"
+    nginx.ingress.kubernetes.io/limit-burst-multiplier: "2"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      sub_filter_once off;
+      sub_filter_types text/html;
+      sub_filter 'https://gochain.io' '';
+      sub_filter 'GoChain' '';
+      sub_filter 'This is an RPC endpoint for' 'RPC proxy based on https://github.com/gochain/rpc-proxy';
+spec:
+  tls:
+  - hosts:
+    - "rpc.{{ .Values.domain }}"
+  rules:
+  - host: "rpc.{{ .Values.domain }}"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            # TODO: change to dshackle once https://github.com/emeraldpay/dshackle/issues/132 is solved
+            name: rpc-proxy
+            port:
+              number: 8545

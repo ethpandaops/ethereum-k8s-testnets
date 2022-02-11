@@ -1,0 +1,34 @@
+replicaCount: 1
+
+service:
+  type: ClusterIP
+
+initContainers:
+- name: init-geth-snapshot
+  image: amazon/aws-cli
+  imagePullPolicy: IfNotPresent
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+  env:
+    - name: AWS_ACCESS_KEY_ID
+      value: "" #injected via -set
+    - name: AWS_SECRET_ACCESS_KEY
+      value: "" #injected via -set
+  command:
+    - sh
+    - -ace
+    - >
+      if ! [ -f /data/geth-goerli.tar ];
+      then
+        cd /data;
+        aws s3 cp s3://ethdevops-data-snapshots/geth-goerli.tar geth-goerli.tar --region eu-central-1 --endpoint-url https://s3-accelerate.amazonaws.com;
+        echo "downloaded geth-goerli.tar";
+      else
+        echo "geth-goerli.tar already imported. skipping..."
+      fi;
+  volumeMounts:
+    - name: staticsite
+      mountPath: "/data"
+
+staticSitePVC: "snapshot"

@@ -1,0 +1,7 @@
+image:
+  repository: skylenet/ethereum-testnet-homepage
+  tag: latest@sha256:3045819c2b2f0ff541e9b7b0c2c681a8278c466d196fe853148728e82e3de592
+  pullPolicy: IfNotPresent
+
+customMarkdown: |-
+  #
