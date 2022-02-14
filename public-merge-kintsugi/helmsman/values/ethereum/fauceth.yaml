@@ -1,6 +1,6 @@
 image:
   repository: ghcr.io/komputing/fauceth
-  tag: release@sha256:2818f702bec725b9e423a7977a16b42527dd4475a71029ebaeacb115b58123c2
+  tag: release@sha256:31bb837eab9624483b8c2caf7f4b9fb789ca3b6e1ae87d01394f047c70f2db9d
   pullPolicy: IfNotPresent
 
 secretEnv:
