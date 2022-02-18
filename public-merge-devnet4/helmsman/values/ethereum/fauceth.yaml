@@ -1,0 +1,50 @@
+image:
+  repository: ghcr.io/komputing/fauceth
+  tag: release@sha256:31bb837eab9624483b8c2caf7f4b9fb789ca3b6e1ae87d01394f047c70f2db9d
+  pullPolicy: IfNotPresent
+
+secretEnv:
+  APP_AMOUNT: "10710000000000000000" # 10.71 ETH
+  APP_IMAGEURL: "https://github.com/parithosh/testnet-faucet/raw/master/public/assets/images/ethereum-merge.png"
+  APP_TITLE: "MergeDevnet4 FaucETH"
+  APP_CHAINS: "1337752"
+  APP_LOGGING: "VERBOSE"
+
+initContainers:
+  - name: init-config
+    image: bash:latest
+    imagePullPolicy: IfNotPresent
+    securityContext:
+      runAsNonRoot: false
+      runAsUser: 0
+    volumeMounts:
+      - name: config
+        mountPath: /config
+    command:
+    - bash
+    - -ace
+    - >
+      echo '
+      [{
+        "name": "MergeDevnet4",
+        "title": "Merge Devnet4 testnet",
+        "chain": "ETH",
+        "rpc": ["https://rpc.devnet4.themerge.dev"],
+        "faucets": ["https://faucet.devnet4.themerge.dev"],
+        "nativeCurrency": {
+          "name": "devnet4 Ethereum",
+          "symbol": "dev4ETH",
+          "decimals": 18
+        },
+        "infoURL": "https://devnet4.themerge.dev/",
+        "shortName": "merge-devnet4",
+        "chainId": 1337752,
+        "networkId": 1337752,
+        "explorers": [{
+          "name": "devnet4 explorer",
+          "url": "https://explorer.devnet4.themerge.dev",
+          "standard": "EIP3091"
+        }]
+      }]
+      ' > /config/chains.json;
+      cat /config/chains.json;

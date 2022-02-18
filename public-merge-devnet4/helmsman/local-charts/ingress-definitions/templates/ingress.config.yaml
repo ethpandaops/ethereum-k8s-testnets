@@ -1,0 +1,250 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: github-external
+spec:
+  type: ExternalName
+  externalName: raw.githubusercontent.com
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-config-bootnode-el
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-4/el_bootnode.txt
+spec:
+  tls:
+  - hosts:
+    - "config.{{ .Values.domain }}"
+  rules:
+  - host: "config.{{ .Values.domain }}"
+    http:
+      paths:
+      - path: /el/bootnodes
+        pathType: Exact
+        backend:
+          service:
+            name: github-external
+            port:
+              number: 443
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-config-bootnode-cl
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-4/bootstrap_nodes.txt
+spec:
+  tls:
+  - hosts:
+    - "config.{{ .Values.domain }}"
+  rules:
+  - host: "config.{{ .Values.domain }}"
+    http:
+      paths:
+      - path: /cl/bootnodes
+        pathType: Exact
+        backend:
+          service:
+            name: github-external
+            port:
+              number: 443
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-config-el-genesis-chainspec
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-4/nethermind_genesis.json
+spec:
+  tls:
+  - hosts:
+    - "config.{{ .Values.domain }}"
+  rules:
+  - host: "config.{{ .Values.domain }}"
+    http:
+      paths:
+      - path: /el/genesis/chainspec.json
+        pathType: Exact
+        backend:
+          service:
+            name: github-external
+            port:
+              number: 443
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-config-el-genesis-geth
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-4/genesis.json
+spec:
+  tls:
+  - hosts:
+    - "config.{{ .Values.domain }}"
+  rules:
+  - host: "config.{{ .Values.domain }}"
+    http:
+      paths:
+      - path: /el/genesis/geth.json
+        pathType: Exact
+        backend:
+          service:
+            name: github-external
+            port:
+              number: 443
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-config-cl-genesis-config
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-4/config.yaml
+spec:
+  tls:
+  - hosts:
+    - "config.{{ .Values.domain }}"
+  rules:
+  - host: "config.{{ .Values.domain }}"
+    http:
+      paths:
+      - path: /cl/genesis/config.yaml
+        pathType: Exact
+        backend:
+          service:
+            name: github-external
+            port:
+              number: 443
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-config-cl-genesis-ssz
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-4/genesis.ssz
+spec:
+  tls:
+  - hosts:
+    - "config.{{ .Values.domain }}"
+  rules:
+  - host: "config.{{ .Values.domain }}"
+    http:
+      paths:
+      - path: /cl/genesis/genesis.ssz
+        pathType: Exact
+        backend:
+          service:
+            name: github-external
+            port:
+              number: 443
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-config-cl-genesis-deployblock
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-4/deploy_block.txt
+spec:
+  tls:
+  - hosts:
+    - "config.{{ .Values.domain }}"
+  rules:
+  - host: "config.{{ .Values.domain }}"
+    http:
+      paths:
+      - path: /cl/genesis/deploy_block.txt
+        pathType: Exact
+        backend:
+          service:
+            name: github-external
+            port:
+              number: 443
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-config-cl-genesis-depositcontract
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-4/deposit_contract.txt
+spec:
+  tls:
+  - hosts:
+    - "config.{{ .Values.domain }}"
+  rules:
+  - host: "config.{{ .Values.domain }}"
+    http:
+      paths:
+      - path: /cl/genesis/deposit_contract.txt
+        pathType: Exact
+        backend:
+          service:
+            name: github-external
+            port:
+              number: 443
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-config-cl-genesis-depositcontractblock
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-4/deposit_contract_block.txt
+spec:
+  tls:
+  - hosts:
+    - "config.{{ .Values.domain }}"
+  rules:
+  - host: "config.{{ .Values.domain }}"
+    http:
+      paths:
+      - path: /cl/genesis/deposit_contract_block.txt
+        pathType: Exact
+        backend:
+          service:
+            name: github-external
+            port:
+              number: 443
