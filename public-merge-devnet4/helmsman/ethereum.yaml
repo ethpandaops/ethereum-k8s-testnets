@@ -35,6 +35,13 @@ appsTemplates:
     valuesFiles:
       - values/ethereum/nethermind.yaml
       - values/ethereum/tolerations/clients.yaml
+  lighthouse: &lighthouse
+    chart: "ethereum-helm-charts/lighthouse"
+    version: "0.1.0"
+    group: lighthouse
+    valuesFiles:
+      - values/ethereum/lighthouse-beacon.yaml
+      - values/ethereum/tolerations/clients.yaml
   lodestar: &lodestar
     chart: "ethereum-helm-charts/lodestar"
     version: "0.1.0"
@@ -87,6 +94,19 @@ apps:
       persistence.size: 200Gi
       p2pNodePort.startAt: 31130
       extraEnv[0].value: "geth-teku-archive"
+
+  #
+  # Lighthouse/Geth
+  #
+  geth-lighthouse-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30140}}
+  lighthouse-geth:
+    <<: *common
+    <<: *lighthouse
+    set:
+      replicas: 1
+      p2pNodePort.startAt: 31140
+      extraEnv[0].value: "geth-lighthouse"
+
 
   #
   # Lodestar/Geth

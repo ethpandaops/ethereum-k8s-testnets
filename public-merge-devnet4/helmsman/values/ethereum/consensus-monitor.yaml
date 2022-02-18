@@ -148,6 +148,14 @@ initContainers:
       for i in {0..0}; do
         echo "
         [[monitor.endpoints]]
+        consensus = 'http://lighthouse-geth-$i.lighthouse-geth-headless.ethereum.svc.cluster.local:5052'
+        execution = 'Geth ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..0}; do
+        echo "
+        [[monitor.endpoints]]
         consensus = 'http://lodestar-geth-$i.lodestar-geth-headless.ethereum.svc.cluster.local:9596'
         execution = 'Geth ($i)'
         " >> /config-update/config.toml;

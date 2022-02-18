@@ -14,8 +14,8 @@ config:
     altairForkEpoch: $ALTAIR_FORK_EPOCH
   indexer:
     node:
-      host: "teku-geth-0.teku-geth-headless.ethereum.svc.cluster.local"
-      port: "5051"
+      host: "lighthouse-geth-0.lighthouse-geth-headless.ethereum.svc.cluster.local"
+      port: "5052"
       type: "lighthouse"
       pageSize: 500
     eth1Endpoint: http://dshackle:8545/eth
@@ -48,8 +48,8 @@ initContainers:
     - >
       apk add jq curl gettext;
       PHASE0_ENDPOINT=https://config.devnet4.themerge.dev/cl/genesis/config.yaml;
-      GENESIS_API_ENDPOINT=http://teku-geth-0.teku-geth-headless.ethereum.svc.cluster.local:5051/eth/v1/beacon/genesis;
-      CONFIG_API_ENDPOINT=http://teku-geth-0.teku-geth-headless.ethereum.svc.cluster.local:5051/eth/v1/config/spec;
+      GENESIS_API_ENDPOINT=http://lighthouse-geth-0.lighthouse-geth-headless.ethereum.svc.cluster.local:5052/eth/v1/beacon/genesis;
+      CONFIG_API_ENDPOINT=http://lighthouse-geth-0.lighthouse-geth-headless.ethereum.svc.cluster.local:5052/eth/v1/config/spec;
       GENESIS_DEPLOY_BLOCK_URL=https://config.devnet4.themerge.dev/cl/genesis/deploy_block.txt;
       export ETH1_DEPOSIT_CONTRACT_BLOCK=$(curl -s $GENESIS_DEPLOY_BLOCK_URL);
       echo "waiting to fetch beacon info from $GENESIS_API_ENDPOINT";
