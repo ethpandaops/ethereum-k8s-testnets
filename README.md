@@ -13,6 +13,10 @@ Private network from scratch running all the major clients.
 
 Providing the infrastructure and tooling for https://devnet3.themerge.dev/  (Deprecated)
 
+### [Merge Devnet 4](public-merge-devnet4)
+
+Providing the infrastructure and tooling for https://devnet4.themerge.dev/
+
 ### [Merge Kintsugi](public-merge-kintsugi)
 
 Providing the infrastructure and tooling for https://kintsugi.themerge.dev/
