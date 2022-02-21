@@ -1,0 +1,81 @@
+context: shared-services
+
+settings:
+  kubeContext: do-ams3-eth-k8s-merge-devnet4-ams3
+
+helmRepos:
+  jetstack: https://charts.jetstack.io
+  prometheus-community: https://prometheus-community.github.io/helm-charts
+  metrics-server: https://kubernetes-sigs.github.io/metrics-server/
+  ebrianne: https://ebrianne.github.io/helm-charts
+  ingress-nginx: https://kubernetes.github.io/ingress-nginx
+  bitnami: https://charts.bitnami.com/bitnami
+namespaces:
+  kube-system:
+  shared-services:
+    protected: false
+
+apps:
+  # Local storage
+  local-path-provisioner:
+    namespace: kube-system
+    enabled: true
+    chart: "ebrianne/local-path-provisioner"
+    version: "0.0.20"
+    wait: true
+    priority: -100
+  # Metrics collection
+  kube-prometheus-stack:
+    namespace: shared-services
+    enabled: true
+    chart: "prometheus-community/kube-prometheus-stack"
+    version: "18.0.12"
+    valuesFiles:
+      - values/shared-services/kube-prometheus-stack.yaml
+    wait: true
+  # Metrics server
+  metrics-server:
+    namespace: shared-services
+    enabled: true
+    chart: "metrics-server/metrics-server"
+    version: "3.7.0"
+  # Cert manager
+  cert-manager:
+    namespace: shared-services
+    enabled: true
+    chart: "jetstack/cert-manager"
+    version: "v1.6.1"
+    valuesFiles:
+      - values/shared-services/cert-manager.yaml
+    wait: true
+    priority: -100
+  cluster-issuer:
+    namespace: shared-services
+    enabled: true
+    chart: "local-charts/cluster-issuer"
+    version: "0.0.1"
+    set:
+      defaultCert.domain: "$DO_DNS_DOMAIN"
+      secrets.digitalocean_access_token: "$DO_DNS_ZONE_TOKEN"
+  # External DNS
+  external-dns:
+    namespace: shared-services
+    enabled: true
+    chart: "bitnami/external-dns"
+    version: "5.5.2"
+    valuesFiles:
+      - values/shared-services/external-dns.yaml
+    set:
+      digitalocean.apiToken: "$DO_DNS_ZONE_TOKEN"
+      domainFilters[0]: "$DO_DNS_DOMAIN"
+  # Ingress controller
+  ingress-nginx:
+    namespace: shared-services
+    enabled: true
+    chart: "ingress-nginx/ingress-nginx"
+    version: "4.0.12"
+    valuesFiles:
+      - values/shared-services/ingress-nginx.yaml
+    set:
+      controller.service.annotations."external-dns\.alpha\.kubernetes\.io/hostname": >-
+        ${DO_DNS_DOMAIN},*.${DO_DNS_DOMAIN}

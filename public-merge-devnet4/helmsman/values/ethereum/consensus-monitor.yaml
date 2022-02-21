@@ -1,0 +1,228 @@
+image:
+  repository: ralexstokes/ethereum_consensus_monitor
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# ENV vars will be replaced using the 'init-config' init container
+config: |
+  [network]
+  name = "merge-devnet4"
+  etherscan_api_key = "some-etherscan-api-key"
+
+  [consensus_chain]
+  seconds_per_slot = 12
+  slots_per_epoch = 32
+  genesis_time = $GENESIS_TIME
+
+  [weak_subjectivity]
+  provider_endpoint = "http://eth2-ws-provider_eth2_ws_server_1:80"
+
+  [monitor]
+  output_dir = "public"
+  port = 8080
+
+  [[monitor.endpoints]]
+  consensus = "http://164.92.193.72:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://164.92.193.51:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://164.92.206.33:4000"
+  execution = "nethermind"
+
+  [[monitor.endpoints]]
+  consensus = "http://164.92.206.135:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.227.128.134:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://164.92.206.35:4000"
+  execution = "nethermind"
+
+  [[monitor.endpoints]]
+  consensus = "http://164.92.206.58:4000"
+  execution = "nethermind"
+
+  [[monitor.endpoints]]
+  consensus = "http://164.92.200.123:4000"
+  execution = "nethermind"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.227.128.133:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.227.128.131:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.227.128.129:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.227.128.128:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.227.128.123:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.227.128.112:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.227.128.122:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.227.128.121:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.227.128.119:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.227.128.198:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.227.128.126:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.227.128.124:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.227.128.88:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.227.128.127:4000"
+  execution = "geth"
+
+  [[monitor.endpoints]]
+  consensus = "http://64.227.173.35:4000"
+  execution = "geth"
+
+
+
+customArgs:
+  - --config-path=/config-update/config.toml
+
+extraVolumes:
+  - name: config-update
+    emptyDir: {}
+
+extraVolumeMounts:
+  - name: config-update
+    mountPath: "/config-update"
+
+initContainers:
+  - name: init-config
+    image: bash:latest
+    imagePullPolicy: IfNotPresent
+    securityContext:
+      runAsNonRoot: false
+      runAsUser: 0
+    command:
+    - bash
+    - -c
+    - >
+      apk add jq curl gettext;
+      BEACON_API_ENDPOINT=http://teku-geth:5051/eth/v1/beacon/genesis;
+      echo "waiting to fetch beacon info from $BEACON_API_ENDPOINT";
+      while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $BEACON_API_ENDPOINT)" != "200" ]]; do sleep 5; done;
+      export GENESIS_TIME=$(curl -s $BEACON_API_ENDPOINT | jq -r '.data.genesis_time');
+      echo "got genesis time: $GENESIS_TIME";
+      envsubst < /config.toml > /config-update/config.toml;
+
+      for i in {0..0}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://lighthouse-geth-$i.lighthouse-geth-headless.ethereum.svc.cluster.local:5052'
+        execution = 'Geth ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..0}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://lodestar-geth-$i.lodestar-geth-headless.ethereum.svc.cluster.local:9596'
+        execution = 'Geth ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..0}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://lodestar-nethermind-$i.lodestar-nethermind-headless.ethereum.svc.cluster.local:9596'
+        execution = 'Nethermind ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..0}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://teku-geth-$i.teku-geth-headless.ethereum.svc.cluster.local:5051'
+        execution = 'Geth ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..0}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://teku-nethermind-$i.teku-nethermind-headless.ethereum.svc.cluster.local:5051'
+        execution = 'Nethermind ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..0}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://nimbus-geth-$i:5052'
+        execution = 'Geth ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..0}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://nimbus-nethermind-$i:5052'
+        execution = 'Nethermind ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..0}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://prysm-geth-$i.prysm-geth-headless.ethereum.svc.cluster.local:3500'
+        execution = 'Geth ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      for i in {0..0}; do
+        echo "
+        [[monitor.endpoints]]
+        consensus = 'http://prysm-nethermind-$i.prysm-nethermind-headless.ethereum.svc.cluster.local:3500'
+        execution = 'Nethermind ($i)'
+        " >> /config-update/config.toml;
+      done;
+
+      cat /config-update/config.toml;
+
+    volumeMounts:
+      - name: config-update
+        mountPath: /config-update
+      - name: config
+        mountPath: "/config.toml"
+        subPath: config.toml
+        readOnly: true

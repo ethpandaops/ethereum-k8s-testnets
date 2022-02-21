@@ -1,0 +1,4 @@
+apiVersion: v1
+description: All ingress resource definitions
+name: ingress-definitions
+version: 0.0.1
