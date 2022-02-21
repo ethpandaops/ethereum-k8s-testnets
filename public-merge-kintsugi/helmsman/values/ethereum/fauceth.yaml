@@ -1,6 +1,6 @@
 image:
   repository: ghcr.io/komputing/fauceth
-  tag: release@sha256:31bb837eab9624483b8c2caf7f4b9fb789ca3b6e1ae87d01394f047c70f2db9d
+  tag: release@sha256:4ab8fa4143b48b5b9da8bbd01c4ef3fff2eefc637a5d003ca145e06129edf966
   pullPolicy: IfNotPresent
 
 secretEnv:
@@ -9,3 +9,42 @@ secretEnv:
   APP_TITLE: "Kintsugi FaucETH"
   APP_CHAINS: "1337702"
   APP_LOGGING: "VERBOSE"
+
+initContainers:
+  - name: init-config
+    image: bash:latest
+    imagePullPolicy: IfNotPresent
+    securityContext:
+      runAsNonRoot: false
+      runAsUser: 0
+    volumeMounts:
+      - name: config
+        mountPath: /config
+    command:
+    - bash
+    - -ace
+    - >
+      echo '
+      [{
+        "name": "Kintsugi",
+        "title": "Kintsugi Merge Testnet",
+        "chain": "ETH",
+        "rpc": ["http://geth-lighthouse-0:8545"],
+        "faucets": ["https://faucet.kintsugi.themerge.dev"],
+        "nativeCurrency": {
+          "name": "kintsugi Ethereum",
+          "symbol": "kiETH",
+          "decimals": 18
+        },
+        "infoURL": "https://kintsugi.themerge.dev/",
+        "shortName": "kintsugi",
+        "chainId": 1337702,
+        "networkId": 1337702,
+        "explorers": [{
+          "name": "kintsugi explorer",
+          "url": "https://explorer.kintsugi.themerge.dev",
+          "standard": "EIP3091"
+        }]
+      }]
+      ' > /config/chains.json;
+      cat /config/chains.json;

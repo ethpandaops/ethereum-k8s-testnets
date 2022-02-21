@@ -1,6 +1,6 @@
 image:
   repository: ghcr.io/komputing/fauceth
-  tag: release@sha256:31bb837eab9624483b8c2caf7f4b9fb789ca3b6e1ae87d01394f047c70f2db9d
+  tag: release@sha256:4ab8fa4143b48b5b9da8bbd01c4ef3fff2eefc637a5d003ca145e06129edf966
   pullPolicy: IfNotPresent
 
 secretEnv:
@@ -29,7 +29,7 @@ initContainers:
         "name": "MergeDevnet4",
         "title": "Merge Devnet4 testnet",
         "chain": "ETH",
-        "rpc": ["https://rpc.devnet4.themerge.dev"],
+        "rpc": ["http://geth-teku-0:8545"],
         "faucets": ["https://faucet.devnet4.themerge.dev"],
         "nativeCurrency": {
           "name": "devnet4 Ethereum",
