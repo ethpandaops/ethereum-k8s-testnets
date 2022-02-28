@@ -1,6 +1,6 @@
 image:
   repository: parithoshj/geth
-  tag: merge-8f408a2
+  tag: merge-371a525
   pullPolicy: IfNotPresent
 
 replicas: 1
@@ -20,7 +20,7 @@ extraArgs:
 
 initContainers:
 - name: init-genesis
-  image: parithoshj/geth:merge-8f408a2
+  image: parithoshj/geth:merge-371a525
   imagePullPolicy: IfNotPresent
   securityContext:
     runAsNonRoot: false
