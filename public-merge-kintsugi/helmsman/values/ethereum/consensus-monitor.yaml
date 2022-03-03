@@ -351,7 +351,7 @@ initContainers:
         " >> /config-update/config.toml;
       done;
 
-      for i in {0..3}; do
+      for i in {0..0}; do
         echo "
         [[monitor.endpoints]]
         consensus = 'http://lighthouse-nethermind-$i.lighthouse-nethermind-headless.ethereum.svc.cluster.local:5052'
@@ -359,7 +359,7 @@ initContainers:
         " >> /config-update/config.toml;
       done;
 
-      for i in {0..1}; do
+      for i in {0..0}; do
         echo "
         [[monitor.endpoints]]
         consensus = 'http://lighthouse-besu-$i.lighthouse-besu-headless.ethereum.svc.cluster.local:5052'
@@ -367,7 +367,7 @@ initContainers:
         " >> /config-update/config.toml;
       done;
 
-      for i in {0..4}; do
+      for i in {0..0}; do
         echo "
         [[monitor.endpoints]]
         consensus = 'http://lodestar-geth-$i.lodestar-geth-headless.ethereum.svc.cluster.local:9596'
@@ -375,7 +375,7 @@ initContainers:
         " >> /config-update/config.toml;
       done;
 
-      for i in {0..4}; do
+      for i in {0..0}; do
         echo "
         [[monitor.endpoints]]
         consensus = 'http://lodestar-nethermind-$i.lodestar-nethermind-headless.ethereum.svc.cluster.local:9596'
@@ -383,7 +383,7 @@ initContainers:
         " >> /config-update/config.toml;
       done;
 
-      for i in {0..1}; do
+      for i in {0..0}; do
         echo "
         [[monitor.endpoints]]
         consensus = 'http://teku-geth-$i.teku-geth-headless.ethereum.svc.cluster.local:5051'
@@ -391,7 +391,7 @@ initContainers:
         " >> /config-update/config.toml;
       done;
 
-      for i in {0..1}; do
+      for i in {0..0}; do
         echo "
         [[monitor.endpoints]]
         consensus = 'http://teku-nethermind-$i.teku-nethermind-headless.ethereum.svc.cluster.local:5051'
@@ -399,7 +399,7 @@ initContainers:
         " >> /config-update/config.toml;
       done;
 
-      for i in {0..1}; do
+      for i in {0..0}; do
         echo "
         [[monitor.endpoints]]
         consensus = 'http://teku-besu-$i.teku-besu-headless.ethereum.svc.cluster.local:5051'
@@ -407,7 +407,7 @@ initContainers:
         " >> /config-update/config.toml;
       done;
 
-      for i in {0..1}; do
+      for i in {0..0}; do
         echo "
         [[monitor.endpoints]]
         consensus = 'http://nimbus-geth-$i:5052'
@@ -415,7 +415,7 @@ initContainers:
         " >> /config-update/config.toml;
       done;
 
-      for i in {0..1}; do
+      for i in {0..0}; do
         echo "
         [[monitor.endpoints]]
         consensus = 'http://nimbus-nethermind-$i:5052'
@@ -423,7 +423,7 @@ initContainers:
         " >> /config-update/config.toml;
       done;
 
-      for i in {0..1}; do
+      for i in {0..0}; do
         echo "
         [[monitor.endpoints]]
         consensus = 'http://prysm-geth-$i.prysm-geth-headless.ethereum.svc.cluster.local:3500'
@@ -431,7 +431,7 @@ initContainers:
         " >> /config-update/config.toml;
       done;
 
-      for i in {0..1}; do
+      for i in {0..0}; do
         echo "
         [[monitor.endpoints]]
         consensus = 'http://prysm-nethermind-$i.prysm-nethermind-headless.ethereum.svc.cluster.local:3500'
