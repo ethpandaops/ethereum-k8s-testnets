@@ -9,17 +9,22 @@ Most of the helm charts being used in this repo come from [skylenet/ethereum-hel
 
 Private network from scratch running all the major clients.
 
-### [Merge Devnet 3](public-merge-devnet3)
+### [Merge Kintsugi](public-merge-kintsugi)
 
-Providing the infrastructure and tooling for https://devnet3.themerge.dev/  (Deprecated)
+Providing the infrastructure and tooling for https://kintsugi.themerge.dev/
+
+### [Merge Devnet 5](public-merge-devnet4)
+
+Providing the infrastructure and tooling for https://devnet5.themerge.dev/
 
 ### [Merge Devnet 4](public-merge-devnet4)
 
 Providing the infrastructure and tooling for https://devnet4.themerge.dev/
 
-### [Merge Kintsugi](public-merge-kintsugi)
+### [Merge Devnet 3](public-merge-devnet3)
 
-Providing the infrastructure and tooling for https://kintsugi.themerge.dev/
+Providing the infrastructure and tooling for https://devnet3.themerge.dev/  (Deprecated)
+
 
 ## License
 
