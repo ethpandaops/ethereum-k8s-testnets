@@ -1,8 +1,8 @@
 replicas: 1
 
 args:
-  - --url=http://geth-lighthouse-1:8545
-  - --wsurl=http://geth-lighthouse-1:8546
+  - --url=http://geth-lighthouse-0:8545
+  - --wsurl=http://geth-lighthouse-0:8546
   - --rpm=100000000
 
 config: |

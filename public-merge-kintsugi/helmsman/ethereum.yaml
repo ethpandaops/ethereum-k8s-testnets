@@ -122,14 +122,11 @@ apps:
   # Lighthouse/Nethermind
   #
   nethermind-lighthouse-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30180}}
-  nethermind-lighthouse-1: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30181}}
-  nethermind-lighthouse-2: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30182}}
-  nethermind-lighthouse-3: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30183}}
   lighthouse-nethermind:
     <<: *common
     <<: *lighthouse
     set:
-      replicas: 4
+      replicas: 1
       p2pNodePort.startAt: 31180
       extraEnv[0].value: "nethermind-lighthouse"
 
@@ -137,27 +134,22 @@ apps:
   # Lighthouse/Besu
   #
   besu-lighthouse-0: {<<: *common, <<: *besu, set: {p2pNodePort.port: 30200}}
-  besu-lighthouse-1: {<<: *common, <<: *besu, set: {p2pNodePort.port: 30201}}
   lighthouse-besu:
     <<: *common
     <<: *lighthouse
     set:
-      replicas: 2
+      replicas: 1
       p2pNodePort.startAt: 31200
       extraEnv[0].value: "besu-lighthouse"
   #
   # Lodestar/Geth
   #
   geth-lodestar-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30240}}
-  geth-lodestar-1: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30241}}
-  geth-lodestar-2: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30242}}
-  geth-lodestar-3: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30243}}
-  geth-lodestar-4: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30244}}
   lodestar-geth:
     <<: *common
     <<: *lodestar
     set:
-      replicas: 5
+      replicas: 1
       p2pNodePort.startAt: 31240
       extraEnv[0].value: "geth-lodestar"
 
@@ -165,15 +157,11 @@ apps:
   # Lodestar/Nethermind
   #
   nethermind-lodestar-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30280}}
-  nethermind-lodestar-1: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30281}}
-  nethermind-lodestar-2: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30282}}
-  nethermind-lodestar-3: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30283}}
-  nethermind-lodestar-4: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30284}}
   lodestar-nethermind:
     <<: *common
     <<: *lodestar
     set:
-      replicas: 5
+      replicas: 1
       p2pNodePort.startAt: 31280
       extraEnv[0].value: "nethermind-lodestar"
 
@@ -181,12 +169,11 @@ apps:
   # Teku/Geth
   #
   geth-teku-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30320}}
-  geth-teku-1: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30321}}
   teku-geth:
     <<: *common
     <<: *teku
     set:
-      replicas: 2
+      replicas: 1
       p2pNodePort.startAt: 31320
       extraEnv[0].value: "geth-teku"
 
@@ -194,12 +181,11 @@ apps:
   # Teku/Nethermind
   #
   nethermind-teku-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30340}}
-  nethermind-teku-1: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30341}}
   teku-nethermind:
     <<: *common
     <<: *teku
     set:
-      replicas: 2
+      replicas: 1
       p2pNodePort.startAt: 31340
       extraEnv[0].value: "nethermind-teku"
 
@@ -219,28 +205,23 @@ apps:
   # Nimbus/Geth
   #
   geth-nimbus-0: {<<: *common, <<: *geth,   set: {p2pNodePort.port: 30380}}
-  geth-nimbus-1: {<<: *common, <<: *geth,   set: {p2pNodePort.port: 30381}}
   nimbus-geth-0: {<<: *common, <<: *nimbus, set: {p2pNodePort.port: 31380, "extraEnv[0].value": "geth-nimbus-0:8546"}}
-  nimbus-geth-1: {<<: *common, <<: *nimbus, set: {p2pNodePort.port: 31381, "extraEnv[0].value": "geth-nimbus-1:8546"}}
 
   #
   # Nimbus/Nethermind
   #
   nethermind-nimbus-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30420}}
-  nethermind-nimbus-1: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30421}}
   nimbus-nethermind-0: {<<: *common, <<: *nimbus,     set: {p2pNodePort.port: 31420, "extraEnv[0].value": "nethermind-nimbus-0:8545"}}
-  nimbus-nethermind-1: {<<: *common, <<: *nimbus,     set: {p2pNodePort.port: 31421, "extraEnv[0].value": "nethermind-nimbus-1:8545"}}
 
   #
   # Prysm/Geth
   #
   geth-prysm-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30440}}
-  geth-prysm-1: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30441}}
   prysm-geth:
     <<: *common
     <<: *prysm
     set:
-      replicas: 2
+      replicas: 1
       p2pNodePort.startAt: 31440
       extraEnv[0].value: "geth-prysm"
 
@@ -248,12 +229,11 @@ apps:
   # Prysm/Nethermind
   #
   nethermind-prysm-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30480}}
-  nethermind-prysm-1: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30481}}
   prysm-nethermind:
     <<: *common
     <<: *prysm
     set:
-      replicas: 2
+      replicas: 1
       p2pNodePort.startAt: 31480
       extraEnv[0].value: "nethermind-prysm"
 
