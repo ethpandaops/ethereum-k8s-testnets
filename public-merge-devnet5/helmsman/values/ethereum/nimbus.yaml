@@ -24,7 +24,7 @@ extraArgs:
   - --max-peers=100
   - --graffiti=$(hostname | cut -c -32)
   - --doppelganger-detection=false
-  - --terminal-total-difficulty-override=5000000000
+  - --terminal-total-difficulty-override=500000000000
   #- --log-level="DEBUG;DEBUG:discv5,libp2p;REQUIRED:none;DISABLED:none"
 initContainers:
 - name: init-genesis
