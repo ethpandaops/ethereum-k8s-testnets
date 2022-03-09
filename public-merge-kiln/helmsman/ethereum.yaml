@@ -28,13 +28,6 @@ appsTemplates:
     valuesFiles:
       - values/ethereum/geth.yaml
       - values/ethereum/tolerations/clients.yaml
-  nethermind: &nethermind
-    chart: "ethereum-helm-charts/nethermind"
-    version: "0.2.0"
-    group: nethermind
-    valuesFiles:
-      - values/ethereum/nethermind.yaml
-      - values/ethereum/tolerations/clients.yaml
   lighthouse: &lighthouse
     chart: "ethereum-helm-charts/lighthouse"
     version: "0.1.0"
@@ -121,18 +114,6 @@ apps:
       extraEnv[0].value: "geth-lodestar"
 
   #
-  # Lodestar/Nethermind
-  #
-  nethermind-lodestar-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30280}}
-  lodestar-nethermind:
-    <<: *common
-    <<: *lodestar
-    set:
-      replicas: 1
-      p2pNodePort.startAt: 31280
-      extraEnv[0].value: "nethermind-lodestar"
-
-  #
   # Teku/Geth
   #
   geth-teku-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30320}}
@@ -145,28 +126,11 @@ apps:
       extraEnv[0].value: "geth-teku"
 
   #
-  # Teku/Nethermind
-  #
-  nethermind-teku-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30340}}
-  teku-nethermind:
-    <<: *common
-    <<: *teku
-    set:
-      replicas: 1
-      p2pNodePort.startAt: 31340
-      extraEnv[0].value: "nethermind-teku"
-
-  #
   # Nimbus/Geth
   #
   geth-nimbus-0: {<<: *common, <<: *geth,   set: {p2pNodePort.port: 30380}}
   nimbus-geth-0: {<<: *common, <<: *nimbus, set: {p2pNodePort.port: 31380, "extraEnv[0].value": "geth-nimbus-0:8546"}}
 
-  #
-  # Nimbus/Nethermind
-  #
-  nethermind-nimbus-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30420}}
-  nimbus-nethermind-0: {<<: *common, <<: *nimbus,     set: {p2pNodePort.port: 31420, "extraEnv[0].value": "nethermind-nimbus-0:8545"}}
 
   #
   # Prysm/Geth
@@ -179,18 +143,6 @@ apps:
       replicas: 1
       p2pNodePort.startAt: 31440
       extraEnv[0].value: "geth-prysm"
-
-  #
-  # Prysm/Nethermind
-  #
-  nethermind-prysm-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30480}}
-  prysm-nethermind:
-    <<: *common
-    <<: *prysm
-    set:
-      replicas: 1
-      p2pNodePort.startAt: 31480
-      extraEnv[0].value: "nethermind-prysm"
 
   #
   # Tooling
