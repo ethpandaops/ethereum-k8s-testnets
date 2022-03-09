@@ -30,7 +30,7 @@ locals {
 }
 
 data "digitalocean_kubernetes_versions" "main" {
-  version_prefix = "1.21.9" # list available options with `doctl kubernetes options versions`
+  version_prefix = "1.22.7" # list available options with `doctl kubernetes options versions`
 }
 
 resource "digitalocean_domain" "default" {
