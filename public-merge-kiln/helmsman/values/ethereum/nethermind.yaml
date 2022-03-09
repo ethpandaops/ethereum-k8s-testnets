@@ -22,7 +22,7 @@ extraArgs:
 - --Mining.Enabled=false
 - --Merge.Enabled=true
 - --Merge.FeeRecipient=0xf97e180c050e5Ab072211Ad2C213Eb5AEE4DF134
-- --Merge.TerminalTotalDifficulty=500000000000
+- --Merge.TerminalTotalDifficulty=1000000000000
 - --Init.DiagnosticMode="None"
 #- --log=TRACE
 
