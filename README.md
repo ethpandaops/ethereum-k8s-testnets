@@ -9,6 +9,10 @@ Most of the helm charts being used in this repo come from [skylenet/ethereum-hel
 
 Private network from scratch running all the major clients.
 
+### [Merge Kiln](public-merge-kiln)
+
+Providing the infrastructure and tooling for https://kiln.themerge.dev/
+
 ### [Merge Kintsugi](public-merge-kintsugi)
 
 Providing the infrastructure and tooling for https://kintsugi.themerge.dev/
