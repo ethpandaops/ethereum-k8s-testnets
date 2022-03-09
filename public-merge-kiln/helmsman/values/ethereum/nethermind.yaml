@@ -16,7 +16,7 @@ extraArgs:
 - --Init.IsMining=true
 - --EthStats.Enabled=true
 - --EthStats.Name=$(hostname)
-- --EthStats.Secret=Devnet5Network
+- --EthStats.Secret=KilnNetwork
 - --EthStats.Server=ws://ethstats:3000/api/
 - --JsonRpc.EnabledModules="net,eth,consensus,engine,subscribe,web3"
 - --Mining.Enabled=false
@@ -38,7 +38,7 @@ initContainers:
     - sh
     - -ace
     - >
-      GENESIS_CHAINSPEC_URI=https://config.devnet5.themerge.dev/el/genesis/chainspec.json;
+      GENESIS_CHAINSPEC_URI=https://config.kiln.themerge.dev/el/genesis/chainspec.json;
       if ! [ -f /data/chainspec.json ];
       then
         wget -O /data/chainspec.json $GENESIS_CHAINSPEC_URI;

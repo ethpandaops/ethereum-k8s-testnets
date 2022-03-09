@@ -33,11 +33,11 @@ initContainers:
     - sh
     - -ace
     - >
-      DEPOSIT_CONTRACT_URI=https://config.devnet5.themerge.dev/cl/genesis/deposit_contract.txt;
-      DEPOSIT_CONTRACT_BLOCK_URI=https://config.devnet5.themerge.dev/cl/genesis/deposit_contract_block.txt;
-      DEPLOY_BLOCK_URI=https://config.devnet5.themerge.dev/cl/genesis/deploy_block.txt;
-      GENESIS_CONFIG_URI=https://config.devnet5.themerge.dev/cl/genesis/config.yaml;
-      GENESIS_SSZ_URI=https://config.devnet5.themerge.dev/cl/genesis/genesis.ssz;
+      DEPOSIT_CONTRACT_URI=https://config.kiln.themerge.dev/cl/genesis/deposit_contract.txt;
+      DEPOSIT_CONTRACT_BLOCK_URI=https://config.kiln.themerge.dev/cl/genesis/deposit_contract_block.txt;
+      DEPLOY_BLOCK_URI=https://config.kiln.themerge.dev/cl/genesis/deploy_block.txt;
+      GENESIS_CONFIG_URI=https://config.kiln.themerge.dev/cl/genesis/config.yaml;
+      GENESIS_SSZ_URI=https://config.kiln.themerge.dev/cl/genesis/genesis.ssz;
       BOOTNODE="enr:-Iq4QKuNB_wHmWon7hv5HntHiSsyE1a6cUTK1aT7xDSU_hNTLW3R4mowUboCsqYoh1kN9v3ZoSu_WuvW9Aw0tQ0Dxv6GAXxQ7Nv5gmlkgnY0gmlwhLKAlv6Jc2VjcDI1NmsxoQK6S-Cii_KmfFdUJL2TANL3ksaKUnNXvTCv1tLwXs0QgIN1ZHCCIyk";
 
       mkdir -p /data/testnet_spec;

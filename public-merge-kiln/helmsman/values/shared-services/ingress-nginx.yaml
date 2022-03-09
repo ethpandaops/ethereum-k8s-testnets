@@ -12,7 +12,7 @@ controller:
       service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
       # Required to deal with Proxy Protocol from internal services/pods
       # More details in: https://github.com/kubernetes/ingress-nginx/issues/3996
-      service.beta.kubernetes.io/do-loadbalancer-hostname: "lb.devnet5.themerge.dev"
+      #service.beta.kubernetes.io/do-loadbalancer-hostname: "lb.kiln.themerge.dev"
   metrics:
     enabled: true
     serviceMonitor:

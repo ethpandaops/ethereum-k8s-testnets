@@ -21,7 +21,7 @@ variable "region" {
 
 variable "cluster_name" {
   type    = string
-  default = "eth-k8s-merge-devnet5"
+  default = "eth-k8s-merge-kiln"
 }
 
 locals {
@@ -34,13 +34,13 @@ data "digitalocean_kubernetes_versions" "main" {
 }
 
 resource "digitalocean_domain" "default" {
-  name       = "devnet5.themerge.dev"
+  name       = "kiln.themerge.dev"
 }
 
 resource "digitalocean_vpc" "main" {
   name     = local.cluster_name
   region   = var.region
-  ip_range = "10.131.0.0/16"
+  ip_range = "10.140.0.0/16"
 }
 
 resource "digitalocean_kubernetes_cluster" "main" {
@@ -121,7 +121,7 @@ resource "digitalocean_kubernetes_node_pool" "clients" {
 resource "digitalocean_kubernetes_node_pool" "beaconexplorer" {
   cluster_id = digitalocean_kubernetes_cluster.main.id
   name       = "${local.cluster_name}-beaconexplorer"
-  size       = "so1_5-2vcpu-16gb" # $155/month (450GB NVMe)
+  size       = "so1_5-4vcpu-32gb" # $250/month (900GB NVMe)
   node_count = 1
   tags       = concat(local.common_tags, ["beaconexplorer"])
 
@@ -139,7 +139,7 @@ resource "digitalocean_kubernetes_node_pool" "beaconexplorer" {
 resource "digitalocean_kubernetes_node_pool" "blockscout" {
   cluster_id = digitalocean_kubernetes_cluster.main.id
   name       = "${local.cluster_name}-blockscout"
-  size       = "so1_5-2vcpu-16gb" # $155/month (450GB NVMe)
+  size       = "so1_5-2vcpu-16gb" # $125/month (450GB NVMe)
   node_count = 1
   tags       = concat(local.common_tags, ["blockscout"])
 

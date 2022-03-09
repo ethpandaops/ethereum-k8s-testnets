@@ -13,18 +13,18 @@ customMarkdown: |-
   ### Execution layer clients
 
   ```sh
-  https://config.devnet5.themerge.dev/el/bootnodes
-  https://config.devnet5.themerge.dev/el/genesis/geth.json
-  https://config.devnet5.themerge.dev/el/genesis/chainspec.json
+  https://config.kiln.themerge.dev/el/bootnodes
+  https://config.kiln.themerge.dev/el/genesis/geth.json
+  https://config.kiln.themerge.dev/el/genesis/chainspec.json
   ```
 
   ### Consensus layer clients
 
   ```
-  https://config.devnet5.themerge.dev/cl/bootnodes
-  https://config.devnet5.themerge.dev/cl/genesis/config.yaml
-  https://config.devnet5.themerge.dev/cl/genesis/genesis.ssz
-  https://config.devnet5.themerge.dev/cl/genesis/deploy_block.txt
-  https://config.devnet5.themerge.dev/cl/genesis/deposit_contract.txt
-  https://config.devnet5.themerge.dev/cl/genesis/deposit_contract_block.txt
+  https://config.kiln.themerge.dev/cl/bootnodes
+  https://config.kiln.themerge.dev/cl/genesis/config.yaml
+  https://config.kiln.themerge.dev/cl/genesis/genesis.ssz
+  https://config.kiln.themerge.dev/cl/genesis/deploy_block.txt
+  https://config.kiln.themerge.dev/cl/genesis/deposit_contract.txt
+  https://config.kiln.themerge.dev/cl/genesis/deposit_contract_block.txt
   ```

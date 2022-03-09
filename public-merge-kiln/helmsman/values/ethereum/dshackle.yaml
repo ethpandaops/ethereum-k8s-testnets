@@ -72,7 +72,7 @@ initContainers:
   - sh
   - -ace
   - >
-    GENESIS_URI=https://config.devnet5.themerge.dev/el/genesis/geth.json;
+    GENESIS_URI=https://config.kiln.themerge.dev/el/genesis/geth.json;
     wget -O genesis.json $GENESIS_URI;
     apk update && apk add jq;
     CHAIN_ID=$(cat genesis.json | jq -r '.config.chainId');

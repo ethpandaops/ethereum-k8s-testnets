@@ -1,7 +1,7 @@
 context: shared-services
 
 settings:
-  kubeContext: do-ams3-eth-k8s-merge-devnet5-ams3
+  kubeContext: do-ams3-eth-k8s-merge-kiln-ams3
 
 helmRepos:
   jetstack: https://charts.jetstack.io

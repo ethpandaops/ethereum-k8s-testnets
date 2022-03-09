@@ -1,6 +1,6 @@
-# Public Merge Devnet5 Testnet (Tooling)
+# Public Kiln Testnet (Tooling)
 
-Creating the tooling infrastructure for [https://devnet5.themerge.dev/](https://devnet5.themerge.dev/)
+Creating the tooling infrastructure for [https://kiln.themerge.dev/](https://kiln.themerge.dev/)
 
 ## Creating your Kubernetes cluster
 

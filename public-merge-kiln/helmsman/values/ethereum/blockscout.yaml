@@ -22,7 +22,7 @@ config:
   ETHEREUM_JSONRPC_HTTP_URL: http://geth-teku-archive-0:8545
   ETHEREUM_JSONRPC_WS_URL: ws://geth-teku-archive-0:8546
   NETWORK: Ethereum
-  SUBNETWORK: MergeDevnet5
+  SUBNETWORK: Kiln
   BLOCK_TRANSFORMER: base
   POOL_SIZE: "15"
   CHAIN_SPEC_PATH: /config-update/genesis.json
@@ -46,7 +46,7 @@ initContainers:
     - sh
     - -ace
     - >
-      GENESIS_URI=https://config.devnet5.themerge.dev/el/genesis/geth.json;
+      GENESIS_URI=https://config.kiln.themerge.dev/el/genesis/geth.json;
       wget -O /config-update/genesis.json $GENESIS_URI;
       echo "got genesis";
     volumeMounts:

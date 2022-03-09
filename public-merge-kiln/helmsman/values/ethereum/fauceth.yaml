@@ -6,7 +6,7 @@ image:
 secretEnv:
   APP_AMOUNT: "10710000000000000000" # 10.71 ETH
   APP_IMAGEURL: "https://github.com/parithosh/testnet-faucet/raw/master/public/assets/images/ethereum-merge.png"
-  APP_TITLE: "MergeDevnet5 FaucETH"
+  APP_TITLE: "Kiln FaucETH"
   APP_CHAINS: "1337762"
   APP_LOGGING: "VERBOSE"
 
@@ -26,23 +26,23 @@ initContainers:
     - >
       echo '
       [{
-        "name": "MergeDevnet5",
-        "title": "Merge Devnet5 testnet",
+        "name": "Kiln",
+        "title": "Kiln testnet",
         "chain": "ETH",
         "rpc": ["http://geth-teku-0:8545"],
-        "faucets": ["https://faucet.devnet5.themerge.dev"],
+        "faucets": ["https://faucet.kiln.themerge.dev"],
         "nativeCurrency": {
-          "name": "devnet5 Ethereum",
-          "symbol": "dev5ETH",
+          "name": "kiln Ethereum",
+          "symbol": "kiETH",
           "decimals": 18
         },
-        "infoURL": "https://devnet5.themerge.dev/",
-        "shortName": "merge-devnet5",
+        "infoURL": "https://kiln.themerge.dev/",
+        "shortName": "kiln",
         "chainId": 1337762,
         "networkId": 1337762,
         "explorers": [{
-          "name": "devnet5 explorer",
-          "url": "https://explorer.devnet5.themerge.dev",
+          "name": "Kiln explorer",
+          "url": "https://explorer.kiln.themerge.dev",
           "standard": "EIP3091"
         }]
       }]

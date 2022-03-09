@@ -1,7 +1,7 @@
 context: ethereum
 
 settings:
-  kubeContext: do-ams3-eth-k8s-merge-devnet5-ams3
+  kubeContext: do-ams3-eth-k8s-merge-kiln-ams3
 
 helmRepos:
   ethereum-helm-charts: https://skylenet.github.io/ethereum-helm-charts
@@ -258,7 +258,7 @@ apps:
     valuesFiles:
       - values/ethereum/testnet-homepage.yaml
     setString:
-      config.params.ethereum.chainName: "MergeDevnet5"
+      config.params.ethereum.chainName: "Kiln"
       config.params.ethereum.chainId: "$EXECUTION_CHAIN_ID"
       config.params.ethereum.ethstatsUrl: "https://ethstats.${DO_DNS_DOMAIN}"
       config.params.ethereum.faucetUrl: "https://faucet.${DO_DNS_DOMAIN}"

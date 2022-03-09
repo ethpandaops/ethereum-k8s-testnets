@@ -19,7 +19,7 @@ extraArgs:
   enode://74744416c7fbdf28cb0a2631d8590c10d31f1d09e944e7f54d9dbf5741d088d4e0360e7c897e0527aee0bc9408cfac0edbea8571cc0ca445bd599be537aad262@164.92.206.58:30303
   "
 - --networkid=$(cat /data/chainid.txt)
-- --ethstats=$(hostname):Devnet5Network@ethstats:3000
+- --ethstats=$(hostname):KilnNetwork@ethstats:3000
 - --syncmode=full
 - --gcmode=archive
 - --ws.api="eth,net,web3,debug,txpool,engine"
@@ -38,7 +38,7 @@ initContainers:
     - -ace
     - >
       BOOTNODE=enode://6167e29219f7a0d35847a784111e5da1d3d52c074711692fdde7f8077c48943fd875fd2f5cc8b4813e6f35e56071ae3d85beaf6b06d8666fdad019d0be3e70f7@64.227.128.126:30303;
-      GENESIS_URI=https://config.devnet5.themerge.dev/el/genesis/geth.json;
+      GENESIS_URI=https://config.kiln.themerge.dev/el/genesis/geth.json;
       if ! [ -f /data/genesis_init_done ];
       then
         wget -O /data/genesis.json $GENESIS_URI;

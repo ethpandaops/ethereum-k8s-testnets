@@ -4,6 +4,6 @@ image:
   pullPolicy: IfNotPresent
 
 secretEnv:
-  WS_SECRET: "Devnet5Network"
+  WS_SECRET: "KilnNetwork"
 
 resources: {}
