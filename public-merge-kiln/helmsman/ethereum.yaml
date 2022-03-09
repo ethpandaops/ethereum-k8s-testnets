@@ -15,7 +15,7 @@ appsTemplates:
     namespace: ethereum
     enabled: true
   geth_archive: &geth_archive
-    chart: "../../../ethereum-helm-charts/charts/geth"
+    chart: "ethereum-helm-charts/geth"
     version: "0.2.1"
     group: geth_archive
     valuesFiles:
@@ -24,7 +24,7 @@ appsTemplates:
     setString:
       initContainers[0].env[0].value: "$ETH_CLIENTS_AUTH_JWT"
   geth: &geth
-    chart: "../../../ethereum-helm-charts/charts/geth"
+    chart: "ethereum-helm-charts/geth"
     version: "0.2.1"
     group: geth
     valuesFiles:
