@@ -1,0 +1,268 @@
+context: ethereum
+
+settings:
+  kubeContext: do-ams3-eth-k8s-merge-devnet5-ams3
+
+helmRepos:
+  ethereum-helm-charts: https://skylenet.github.io/ethereum-helm-charts
+
+namespaces:
+  ethereum:
+    protected: false
+
+appsTemplates:
+  common: &common
+    namespace: ethereum
+    enabled: true
+  geth_archive: &geth_archive
+    chart: "ethereum-helm-charts/geth"
+    version: "0.2.0"
+    group: geth_archive
+    valuesFiles:
+      - values/ethereum/geth-archive.yaml
+      - values/ethereum/tolerations/clients.yaml
+  geth: &geth
+    chart: "ethereum-helm-charts/geth"
+    version: "0.2.0"
+    group: geth
+    valuesFiles:
+      - values/ethereum/geth.yaml
+      - values/ethereum/tolerations/clients.yaml
+  nethermind: &nethermind
+    chart: "ethereum-helm-charts/nethermind"
+    version: "0.2.0"
+    group: nethermind
+    valuesFiles:
+      - values/ethereum/nethermind.yaml
+      - values/ethereum/tolerations/clients.yaml
+  lighthouse: &lighthouse
+    chart: "ethereum-helm-charts/lighthouse"
+    version: "0.1.0"
+    group: lighthouse
+    valuesFiles:
+      - values/ethereum/lighthouse-beacon.yaml
+      - values/ethereum/tolerations/clients.yaml
+  lodestar: &lodestar
+    chart: "ethereum-helm-charts/lodestar"
+    version: "0.1.0"
+    group: lodestar
+    valuesFiles:
+      - values/ethereum/lodestar-beacon.yaml
+      - values/ethereum/tolerations/clients.yaml
+  teku: &teku
+    chart: "ethereum-helm-charts/teku"
+    version: "0.1.0"
+    group: teku
+    valuesFiles:
+      - values/ethereum/teku-beacon.yaml
+      - values/ethereum/tolerations/clients.yaml
+  nimbus: &nimbus
+    chart: "ethereum-helm-charts/nimbus"
+    version: "0.2.1"
+    group: nimbus
+    valuesFiles:
+      - values/ethereum/nimbus.yaml
+      - values/ethereum/tolerations/clients.yaml
+  prysm: &prysm
+    chart: "ethereum-helm-charts/prysm"
+    version: "0.1.0"
+    group: prysm
+    valuesFiles:
+      - values/ethereum/prysm-beacon.yaml
+      - values/ethereum/tolerations/clients.yaml
+
+apps:
+  #
+  # Ingress
+  #
+  ingress-definitions:
+    <<: *common
+    chart: "local-charts/ingress-definitions"
+    version: "0.0.1"
+    set:
+      domain: "$DO_DNS_DOMAIN"
+
+  #
+  # Teku/Geth (Archive)
+  #
+  geth-teku-archive-0: {<<: *common, <<: *geth_archive, set: {p2pNodePort.port: 30130}}
+  teku-geth-archive:
+    <<: *common
+    <<: *teku
+    set:
+      replicas: 1
+      persistence.size: 200Gi
+      p2pNodePort.startAt: 31130
+      extraEnv[0].value: "geth-teku-archive"
+
+  #
+  # Lighthouse/Geth
+  #
+  geth-lighthouse-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30140}}
+  lighthouse-geth:
+    <<: *common
+    <<: *lighthouse
+    set:
+      replicas: 1
+      p2pNodePort.startAt: 31140
+      extraEnv[0].value: "geth-lighthouse"
+
+
+  #
+  # Lodestar/Geth
+  #
+  geth-lodestar-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30240}}
+  lodestar-geth:
+    <<: *common
+    <<: *lodestar
+    set:
+      replicas: 1
+      p2pNodePort.startAt: 31240
+      extraEnv[0].value: "geth-lodestar"
+
+  #
+  # Lodestar/Nethermind
+  #
+  nethermind-lodestar-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30280}}
+  lodestar-nethermind:
+    <<: *common
+    <<: *lodestar
+    set:
+      replicas: 1
+      p2pNodePort.startAt: 31280
+      extraEnv[0].value: "nethermind-lodestar"
+
+  #
+  # Teku/Geth
+  #
+  geth-teku-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30320}}
+  teku-geth:
+    <<: *common
+    <<: *teku
+    set:
+      replicas: 1
+      p2pNodePort.startAt: 31320
+      extraEnv[0].value: "geth-teku"
+
+  #
+  # Teku/Nethermind
+  #
+  nethermind-teku-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30340}}
+  teku-nethermind:
+    <<: *common
+    <<: *teku
+    set:
+      replicas: 1
+      p2pNodePort.startAt: 31340
+      extraEnv[0].value: "nethermind-teku"
+
+  #
+  # Nimbus/Geth
+  #
+  geth-nimbus-0: {<<: *common, <<: *geth,   set: {p2pNodePort.port: 30380}}
+  nimbus-geth-0: {<<: *common, <<: *nimbus, set: {p2pNodePort.port: 31380, "extraEnv[0].value": "geth-nimbus-0:8546"}}
+
+  #
+  # Nimbus/Nethermind
+  #
+  nethermind-nimbus-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30420}}
+  nimbus-nethermind-0: {<<: *common, <<: *nimbus,     set: {p2pNodePort.port: 31420, "extraEnv[0].value": "nethermind-nimbus-0:8545"}}
+
+  #
+  # Prysm/Geth
+  #
+  geth-prysm-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30440}}
+  prysm-geth:
+    <<: *common
+    <<: *prysm
+    set:
+      replicas: 1
+      p2pNodePort.startAt: 31440
+      extraEnv[0].value: "geth-prysm"
+
+  #
+  # Prysm/Nethermind
+  #
+  nethermind-prysm-0: {<<: *common, <<: *nethermind, set: {p2pNodePort.port: 30480}}
+  prysm-nethermind:
+    <<: *common
+    <<: *prysm
+    set:
+      replicas: 1
+      p2pNodePort.startAt: 31480
+      extraEnv[0].value: "nethermind-prysm"
+
+  #
+  # Tooling
+  #
+  ethstats:
+    <<: *common
+    chart: "ethereum-helm-charts/ethstats"
+    version: "0.1.0"
+    priority: -110
+    valuesFiles:
+      - values/ethereum/ethstats.yaml
+  consensus-monitor:
+    <<: *common
+    chart: "ethereum-helm-charts/consensus-monitor"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/consensus-monitor.yaml
+      - values/ethereum/tolerations/blockscout.yaml
+  rpc-proxy:
+    <<: *common
+    chart: "ethereum-helm-charts/rpc-proxy"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/rpc-proxy.yaml
+      - values/ethereum/tolerations/clients.yaml
+  dshackle:
+    <<: *common
+    chart: "ethereum-helm-charts/dshackle"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/dshackle.yaml
+      - values/ethereum/tolerations/clients.yaml
+  beaconchain-explorer:
+    <<: *common
+    chart: "ethereum-helm-charts/beaconchain-explorer"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/beaconchain-explorer.yaml
+      - values/ethereum/tolerations/beaconexplorer.yaml
+  blockscout:
+    <<: *common
+    chart: "ethereum-helm-charts/blockscout"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/blockscout.yaml
+      - values/ethereum/tolerations/blockscout.yaml
+  fauceth:
+    <<: *common
+    chart: "ethereum-helm-charts/fauceth"
+    version: "0.2.1"
+    valuesFiles:
+      - values/ethereum/fauceth.yaml
+    setString:
+      secretEnv.HCAPTCHA_SITEKEY: "$FAUCETH_HCAPTCHA_SITEKEY"
+      secretEnv.HCAPTCHA_SECRET: "$FAUCETH_HCAPTCHA_SECRET"
+      secretEnv.CHAIN_ID: "$EXECUTION_CHAIN_ID"
+      secretEnv.APP_ETHKEY: "$FAUCETH_APP_ETHKEY"
+      secretEnv.CHAIN_EXPLORER: "https://explorer.${DO_DNS_DOMAIN}"
+    set:
+      config.server.Ethereum.chainId: $EXECUTION_CHAIN_ID
+  testnet-homepage:
+    <<: *common
+    chart: "ethereum-helm-charts/testnet-homepage"
+    version: "0.1.0"
+    valuesFiles:
+      - values/ethereum/testnet-homepage.yaml
+    setString:
+      config.params.ethereum.chainName: "MergeDevnet5"
+      config.params.ethereum.chainId: "$EXECUTION_CHAIN_ID"
+      config.params.ethereum.ethstatsUrl: "https://ethstats.${DO_DNS_DOMAIN}"
+      config.params.ethereum.faucetUrl: "https://faucet.${DO_DNS_DOMAIN}"
+      config.params.ethereum.rpcUrl: "https://rpc.${DO_DNS_DOMAIN}"
+      config.params.ethereum.explorerUrl: "https://explorer.${DO_DNS_DOMAIN}"
+      config.params.ethereum.beaconexplorerUrl: "https://beaconchain.${DO_DNS_DOMAIN}"
+      config.params.ethereum.consensusmonitorUrl: "https://consensusmonitor.${DO_DNS_DOMAIN}"
