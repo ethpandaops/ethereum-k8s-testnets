@@ -21,7 +21,7 @@ extraArgs:
   - --execution-endpoints="http://${SERVICE_PREFIX}-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev):8545"
   - --eth1-endpoints="http://${SERVICE_PREFIX}-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev):8545"
   - --merge
-  - --terminal-total-difficulty-override=5000000000
+  - --terminal-total-difficulty-override=500000000000
 initContainers:
 - name: init-genesis
   image: alpine:latest
