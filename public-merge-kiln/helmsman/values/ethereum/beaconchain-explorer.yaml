@@ -86,7 +86,7 @@ postgresql:
       enabled: true
   persistence:
     enabled: true
-    size: 400Gi
+    size: 720Gi
     storageClass: "local-path"
   initdbScripts:
     init_01.sql: |

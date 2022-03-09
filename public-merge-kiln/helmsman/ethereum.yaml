@@ -15,19 +15,23 @@ appsTemplates:
     namespace: ethereum
     enabled: true
   geth_archive: &geth_archive
-    chart: "ethereum-helm-charts/geth"
-    version: "0.2.0"
+    chart: "../../../ethereum-helm-charts/charts/geth"
+    version: "0.2.1"
     group: geth_archive
     valuesFiles:
       - values/ethereum/geth-archive.yaml
       - values/ethereum/tolerations/clients.yaml
+    setString:
+      initContainers[0].env[0].value: "$ETH_CLIENTS_AUTH_JWT"
   geth: &geth
-    chart: "ethereum-helm-charts/geth"
-    version: "0.2.0"
+    chart: "../../../ethereum-helm-charts/charts/geth"
+    version: "0.2.1"
     group: geth
     valuesFiles:
       - values/ethereum/geth.yaml
       - values/ethereum/tolerations/clients.yaml
+    setString:
+      initContainers[0].env[0].value: "$ETH_CLIENTS_AUTH_JWT"
   lighthouse: &lighthouse
     chart: "ethereum-helm-charts/lighthouse"
     version: "0.1.0"
@@ -35,13 +39,8 @@ appsTemplates:
     valuesFiles:
       - values/ethereum/lighthouse-beacon.yaml
       - values/ethereum/tolerations/clients.yaml
-  lodestar: &lodestar
-    chart: "ethereum-helm-charts/lodestar"
-    version: "0.1.0"
-    group: lodestar
-    valuesFiles:
-      - values/ethereum/lodestar-beacon.yaml
-      - values/ethereum/tolerations/clients.yaml
+    setString:
+      initContainers[0].env[0].value: "$ETH_CLIENTS_AUTH_JWT"
   teku: &teku
     chart: "ethereum-helm-charts/teku"
     version: "0.1.0"
@@ -49,20 +48,8 @@ appsTemplates:
     valuesFiles:
       - values/ethereum/teku-beacon.yaml
       - values/ethereum/tolerations/clients.yaml
-  nimbus: &nimbus
-    chart: "ethereum-helm-charts/nimbus"
-    version: "0.2.1"
-    group: nimbus
-    valuesFiles:
-      - values/ethereum/nimbus.yaml
-      - values/ethereum/tolerations/clients.yaml
-  prysm: &prysm
-    chart: "ethereum-helm-charts/prysm"
-    version: "0.1.0"
-    group: prysm
-    valuesFiles:
-      - values/ethereum/prysm-beacon.yaml
-      - values/ethereum/tolerations/clients.yaml
+    setString:
+     initContainers[0].env[0].value: "$ETH_CLIENTS_AUTH_JWT"
 
 apps:
   #
@@ -100,19 +87,6 @@ apps:
       p2pNodePort.startAt: 31140
       extraEnv[0].value: "geth-lighthouse"
 
-
-  #
-  # Lodestar/Geth
-  #
-  geth-lodestar-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30240}}
-  lodestar-geth:
-    <<: *common
-    <<: *lodestar
-    set:
-      replicas: 1
-      p2pNodePort.startAt: 31240
-      extraEnv[0].value: "geth-lodestar"
-
   #
   # Teku/Geth
   #
@@ -124,25 +98,6 @@ apps:
       replicas: 1
       p2pNodePort.startAt: 31320
       extraEnv[0].value: "geth-teku"
-
-  #
-  # Nimbus/Geth
-  #
-  geth-nimbus-0: {<<: *common, <<: *geth,   set: {p2pNodePort.port: 30380}}
-  nimbus-geth-0: {<<: *common, <<: *nimbus, set: {p2pNodePort.port: 31380, "extraEnv[0].value": "geth-nimbus-0:8546"}}
-
-
-  #
-  # Prysm/Geth
-  #
-  geth-prysm-0: {<<: *common, <<: *geth, set: {p2pNodePort.port: 30440}}
-  prysm-geth:
-    <<: *common
-    <<: *prysm
-    set:
-      replicas: 1
-      p2pNodePort.startAt: 31440
-      extraEnv[0].value: "geth-prysm"
 
   #
   # Tooling

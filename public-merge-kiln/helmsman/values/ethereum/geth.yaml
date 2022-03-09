@@ -1,6 +1,6 @@
 image:
   repository: parithoshj/geth
-  tag: merge-59a3672
+  tag: merge-876ca42
   pullPolicy: IfNotPresent
 
 replicas: 1
@@ -16,15 +16,32 @@ extraArgs:
 - --ethstats=$(hostname):KilnNetwork@ethstats:3000
 - --ws.api="eth,net,engine"
 - --http.api="eth,net,engine"
+- --authrpc.jwtsecret="/data/jwtsecret.txt"
+- --authrpc.port=8551
+- --authrpc.host=0.0.0.0
 #- --verbosity=5
+
+extraContainerPorts:
+- name: engine-api
+  containerPort: 8551
+  protocol: TCP
+
+extraPorts:
+- port: 8551
+  targetPort: engine-api
+  protocol: TCP
+  name: engine-api
 
 initContainers:
 - name: init-genesis
-  image: parithoshj/geth:merge-59a3672
+  image: parithoshj/geth:merge-876ca42
   imagePullPolicy: IfNotPresent
   securityContext:
     runAsNonRoot: false
     runAsUser: 0
+  env:
+  - name: "ETH_CLIENTS_AUTH_JWT"
+    value: "" # Will be overwritten via `-set` on main helmsman file
   command:
     - sh
     - -ace
@@ -44,6 +61,7 @@ initContainers:
       fi;
       echo $BOOTNODE > /data/bootnode.txt;
       echo "bootnode init done: $(cat /data/bootnode.txt)";
+      echo -n $ETH_CLIENTS_AUTH_JWT > /data/jwtsecret.txt;
   volumeMounts:
     - name: storage
       mountPath: "/data"

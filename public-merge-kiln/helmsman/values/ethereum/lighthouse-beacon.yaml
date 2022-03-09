@@ -1,6 +1,6 @@
 image:
   repository: sigp/lighthouse
-  tag: latest-unstable@sha256:993923d790b5b651940c61d02554f9a37b5e6f9109e3d7e036471f08251d3a4e
+  tag: latest-unstable@sha256:ea59e1d16747c87de4116b8eb85faa2201987bee2d564961d2e05fc94ac4907e
   pullPolicy: IfNotPresent
 
 p2pNodePort:
@@ -18,10 +18,11 @@ extraArgs:
   - --testnet-dir=/data/testnet_spec
   - --boot-nodes="$(cat /data/testnet_spec/bootstrap_nodes.txt)"
   - --eth1
-  - --execution-endpoints="http://${SERVICE_PREFIX}-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev):8545"
+  - --execution-endpoints="http://${SERVICE_PREFIX}-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev):8551"
   - --eth1-endpoints="http://${SERVICE_PREFIX}-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev):8545"
   - --merge
   - --terminal-total-difficulty-override=1000000000000
+  - --jwt-secrets="/data/jwtsecret.txt"
 initContainers:
 - name: init-genesis
   image: alpine:latest
@@ -29,6 +30,9 @@ initContainers:
   securityContext:
     runAsNonRoot: false
     runAsUser: 0
+  env:
+  - name: "ETH_CLIENTS_AUTH_JWT"
+    value: "" # Will be overwritten via `-set` on main helmsman file
   command:
     - sh
     - -ace
@@ -54,6 +58,7 @@ initContainers:
       fi;
       echo $BOOTNODE > /data/testnet_spec/bootstrap_nodes.txt;
       echo "bootnode init done: $(cat /data/testnet_spec/bootstrap_nodes.txt)";
+      echo -n $ETH_CLIENTS_AUTH_JWT > /data/jwtsecret.txt;
   volumeMounts:
     - name: storage
       mountPath: "/data"

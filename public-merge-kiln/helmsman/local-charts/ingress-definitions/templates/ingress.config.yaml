@@ -16,7 +16,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
-    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-5/el_bootnode.txt
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/kiln/el_bootnode.txt
 spec:
   tls:
   - hosts:
@@ -43,7 +43,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
-    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-5/bootstrap_nodes.txt
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/kiln/bootstrap_nodes.txt
 spec:
   tls:
   - hosts:
@@ -70,7 +70,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
-    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-5/nethermind_genesis.json
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/kiln/nethermind_genesis.json
 spec:
   tls:
   - hosts:
@@ -97,7 +97,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
-    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-5/genesis.json
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/kiln/genesis.json
 spec:
   tls:
   - hosts:
@@ -124,7 +124,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
-    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-5/config.yaml
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/kiln/config.yaml
 spec:
   tls:
   - hosts:
@@ -151,7 +151,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
-    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-5/genesis.ssz
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/kiln/genesis.ssz
 spec:
   tls:
   - hosts:
@@ -178,7 +178,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
-    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-5/deploy_block.txt
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/kiln/deploy_block.txt
 spec:
   tls:
   - hosts:
@@ -205,7 +205,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
-    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-5/deposit_contract.txt
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/kiln/deposit_contract.txt
 spec:
   tls:
   - hosts:
@@ -232,7 +232,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/upstream-vhost: "raw.githubusercontent.com"
-    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/merge-devnet-5/deposit_contract_block.txt
+    nginx.ingress.kubernetes.io/rewrite-target: /eth-clients/merge-testnets/main/kiln/deposit_contract_block.txt
 spec:
   tls:
   - hosts:
