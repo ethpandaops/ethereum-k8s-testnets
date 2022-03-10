@@ -24,7 +24,7 @@ extraArgs:
   - --Xvalidators-proposer-default-fee-recipient=0xf97e180c050e5Ab072211Ad2C213Eb5AEE4DF134
   - --data-storage-non-canonical-blocks-enabled=true
   - --Xee-version=kilnv2
-  - --Xee-jwt-secret="/data/jwtsecret.txt"
+  - --Xee-jwt-secret="/data/jwtsecret"
   - --logging=INFO
 initContainers:
 - name: init-genesis
@@ -61,7 +61,7 @@ initContainers:
       fi;
       echo $BOOTNODE > /data/testnet_spec/bootstrap_nodes.txt;
       echo "bootnode init done: $(cat /data/testnet_spec/bootstrap_nodes.txt)";
-      echo -n $ETH_CLIENTS_AUTH_JWT > /data/jwtsecret.txt;
+      echo -n $ETH_CLIENTS_AUTH_JWT > /data/jwtsecret;
   volumeMounts:
     - name: storage
       mountPath: "/data"

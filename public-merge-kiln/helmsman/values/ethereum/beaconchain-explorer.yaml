@@ -1,6 +1,6 @@
 image:
   repository: skylenet/eth2-beaconchain-explorer
-  tag: merge-devnet3-v2
+  tag: merge-56c2f36-kiln
   pullPolicy: IfNotPresent
 
 config:
@@ -18,7 +18,7 @@ config:
       port: "5052"
       type: "lighthouse"
       pageSize: 500
-    eth1Endpoint: http://dshackle:8545/eth
+    eth1Endpoint: http://geth-lighthouse-0:8545
     eth1DepositContractAddress: $DEPOSIT_CONTRACT_ADDRESS
     eth1DepositContractFirstBlock: $ETH1_DEPOSIT_CONTRACT_BLOCK
 

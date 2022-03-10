@@ -1,6 +1,6 @@
 image:
-  repository: sigp/lighthouse
-  tag: latest-unstable@sha256:ea59e1d16747c87de4116b8eb85faa2201987bee2d564961d2e05fc94ac4907e
+  repository: parithoshj/lighthouse
+  tag: merge-381d0ec
   pullPolicy: IfNotPresent
 
 p2pNodePort:
@@ -22,7 +22,7 @@ extraArgs:
   - --eth1-endpoints="http://${SERVICE_PREFIX}-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev):8545"
   - --merge
   - --terminal-total-difficulty-override=1000000000000
-  - --jwt-secrets="/data/jwtsecret.txt"
+  - --jwt-secrets="/data/jwtsecret"
 initContainers:
 - name: init-genesis
   image: alpine:latest
@@ -58,7 +58,7 @@ initContainers:
       fi;
       echo $BOOTNODE > /data/testnet_spec/bootstrap_nodes.txt;
       echo "bootnode init done: $(cat /data/testnet_spec/bootstrap_nodes.txt)";
-      echo -n $ETH_CLIENTS_AUTH_JWT > /data/jwtsecret.txt;
+      echo -n $ETH_CLIENTS_AUTH_JWT > /data/jwtsecret;
   volumeMounts:
     - name: storage
       mountPath: "/data"

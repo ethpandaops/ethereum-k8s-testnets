@@ -123,13 +123,6 @@ apps:
     valuesFiles:
       - values/ethereum/rpc-proxy.yaml
       - values/ethereum/tolerations/clients.yaml
-  dshackle:
-    <<: *common
-    chart: "ethereum-helm-charts/dshackle"
-    version: "0.1.0"
-    valuesFiles:
-      - values/ethereum/dshackle.yaml
-      - values/ethereum/tolerations/clients.yaml
   beaconchain-explorer:
     <<: *common
     chart: "ethereum-helm-charts/beaconchain-explorer"
