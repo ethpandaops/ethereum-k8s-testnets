@@ -1,0 +1,50 @@
+image:
+  repository: ghcr.io/komputing/fauceth
+  tag: release@sha256:4ab8fa4143b48b5b9da8bbd01c4ef3fff2eefc637a5d003ca145e06129edf966
+  pullPolicy: IfNotPresent
+
+secretEnv:
+  APP_AMOUNT: "32080000000000000000" # 32.08 ETH
+  APP_IMAGEURL: "https://github.com/parithosh/testnet-faucet/raw/master/public/assets/images/ethereum-merge.png"
+  APP_TITLE: "Kiln FaucETH"
+  APP_CHAINS: "1337802"
+  APP_LOGGING: "VERBOSE"
+
+initContainers:
+  - name: init-config
+    image: bash:latest
+    imagePullPolicy: IfNotPresent
+    securityContext:
+      runAsNonRoot: false
+      runAsUser: 0
+    volumeMounts:
+      - name: config
+        mountPath: /config
+    command:
+    - bash
+    - -ace
+    - >
+      echo '
+      [{
+        "name": "Kiln",
+        "title": "Kiln testnet",
+        "chain": "ETH",
+        "rpc": ["http://geth-teku-0:8545"],
+        "faucets": ["https://faucet.kiln.themerge.dev"],
+        "nativeCurrency": {
+          "name": "kiln Ethereum",
+          "symbol": "kiETH",
+          "decimals": 18
+        },
+        "infoURL": "https://kiln.themerge.dev/",
+        "shortName": "kiln",
+        "chainId": 1337802,
+        "networkId": 1337802,
+        "explorers": [{
+          "name": "Kiln explorer",
+          "url": "https://explorer.kiln.themerge.dev",
+          "standard": "EIP3091"
+        }]
+      }]
+      ' > /config/chains.json;
+      cat /config/chains.json;
