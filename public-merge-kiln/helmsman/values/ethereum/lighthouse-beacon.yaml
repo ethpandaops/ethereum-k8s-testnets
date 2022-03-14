@@ -21,7 +21,7 @@ extraArgs:
   - --execution-endpoints="http://${SERVICE_PREFIX}-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev):8551"
   - --eth1-endpoints="http://${SERVICE_PREFIX}-$(echo $(hostname)| rev | cut -d'-' -f 1 | rev):8545"
   - --merge
-  - --terminal-total-difficulty-override=1000000000000
+  - --terminal-total-difficulty-override=20000000000000
   - --jwt-secrets="/data/jwtsecret"
 initContainers:
 - name: init-genesis

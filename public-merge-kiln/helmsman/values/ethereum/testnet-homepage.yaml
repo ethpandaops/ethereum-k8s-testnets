@@ -6,7 +6,12 @@ image:
 customMarkdown: |-
   ## General information
 
-  TTD: `1000000000000`
+  ~~TTD: 1000000000000~~
+
+  New TTD: `20000000000000`
+
+  **⚠️ Important:** If you're running a node then you need to set the right TTD value.
+  Read [this document](https://hackmd.io/DhdBFJLKR822lRjrrQw0lA?both) to learn how to do that.
 
   ## Genesis configuration
 

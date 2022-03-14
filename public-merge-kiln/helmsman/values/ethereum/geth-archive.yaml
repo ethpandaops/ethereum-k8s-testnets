@@ -1,6 +1,6 @@
 image:
   repository: parithoshj/geth
-  tag: merge-50db957
+  tag: merge-b951e9c
   pullPolicy: IfNotPresent
 
 replicas: 1
@@ -22,6 +22,7 @@ extraArgs:
 - --authrpc.port=8551
 - --authrpc.host=0.0.0.0
 - --authrpc.vhosts=*
+- --override.terminaltotaldifficulty=20000000000000
 #- --verbosity=5
 
 extraContainerPorts:
@@ -37,7 +38,7 @@ extraPorts:
 
 initContainers:
 - name: init-genesis
-  image: parithoshj/geth:merge-50db957
+  image: parithoshj/geth:merge-b951e9c
   imagePullPolicy: IfNotPresent
   securityContext:
     runAsNonRoot: false

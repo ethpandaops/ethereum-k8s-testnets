@@ -25,6 +25,7 @@ extraArgs:
   - --data-storage-non-canonical-blocks-enabled=true
   - --Xee-version=kilnv2
   - --Xee-jwt-secret="/data/jwtsecret"
+  - --Xnetwork-total-terminal-difficulty-override=20000000000000
   - --logging=INFO
 initContainers:
 - name: init-genesis
