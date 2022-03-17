@@ -1,6 +1,6 @@
 image:
-  repository: skylenet/eth2-beaconchain-explorer
-  tag: merge-56c2f36-kiln
+  repository: parithoshj/beacon-explorer
+  tag: rebase-from-master
   pullPolicy: IfNotPresent
 
 config:
@@ -93,6 +93,6 @@ postgresql:
       CREATE DATABASE explorer;
     init_02_db.sh: |
       #!/bin/sh
-      curl https://raw.githubusercontent.com/protolambda/eth2-beaconchain-explorer/merge/tables.sql -o /tmp/tables.sql
+      curl https://raw.githubusercontent.com/protolambda/eth2-beaconchain-explorer/rebasing-from-master/tables.sql -o /tmp/tables.sql
       PGPASSWORD=postgres psql -U postgres -h 127.0.0.1 -d explorer -f /tmp/tables.sql
       rm /tmp/tables.sql
