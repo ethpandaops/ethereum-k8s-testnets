@@ -5,6 +5,7 @@ settings:
 
 helmRepos:
   ethereum-helm-charts: https://skylenet.github.io/ethereum-helm-charts
+  bitnami: https://charts.bitnami.com/bitnami
 
 namespaces:
   ethereum:
@@ -166,3 +167,10 @@ apps:
       config.params.ethereum.explorerUrl: "https://explorer.${DO_DNS_DOMAIN}"
       config.params.ethereum.beaconexplorerUrl: "https://beaconchain.${DO_DNS_DOMAIN}"
       config.params.ethereum.consensusmonitorUrl: "https://consensusmonitor.${DO_DNS_DOMAIN}"
+
+  pari-beaconchain-hack:
+    <<: *common
+    chart: "bitnami/nginx"
+    version: 9.9.5
+    valuesFiles:
+      - values/ethereum/pari-beaconchain-hack.yaml

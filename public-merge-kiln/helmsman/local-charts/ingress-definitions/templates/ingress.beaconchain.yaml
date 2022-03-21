@@ -11,6 +11,16 @@ spec:
   - hosts:
     - "beaconchain.{{ .Values.domain }}"
   rules:
+  # - host: "beaconchain.{{ .Values.domain }}"
+  #   http:
+  #     paths:
+  #     - path: /
+  #       pathType: Prefix
+  #       backend:
+  #         service:
+  #           name: beaconchain-explorer
+  #           port:
+  #             number: 3333
   - host: "beaconchain.{{ .Values.domain }}"
     http:
       paths:
@@ -18,6 +28,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: beaconchain-explorer
+            name: pari-beaconchain-hack-nginx
             port:
-              number: 3333
+              number: 80
