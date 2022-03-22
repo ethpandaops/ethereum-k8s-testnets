@@ -12,7 +12,7 @@ config:
   DISABLE_KNOWN_TOKENS: "true"
   SHOW_PRICE_CHART: "false"
   ENABLE_1559_SUPPORT: "true"
-  DISABLE_READ_API: "true"
+  DISABLE_READ_API: "false"
   DISABLE_WRITE_API: "true"
   ENABLE_TXS_STATS: "true"
   SHOW_TXS_CHART: "true"
