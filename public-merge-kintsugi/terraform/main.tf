@@ -5,6 +5,14 @@ terraform {
       version = "~> 2.11.1"
     }
   }
+  backend "s3" {
+    skip_credentials_validation = true
+    skip_metadata_api_check     = true
+    endpoint                    = "https://ams3.digitaloceanspaces.com"
+    region                      = "us-east-1" // needed
+    bucket                      = "efdevops-terraform-remote-state"
+    key                         = "merge-testnets/kintsugi/terraform.tfstate"
+  }
 }
 
 variable "do_token" {}
