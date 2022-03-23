@@ -35,8 +35,38 @@ metadata:
     nginx.ingress.kubernetes.io/limit-burst-multiplier: "2"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       if ($http_user_agent ~* PCRT00|BBBike|wget|Apache-HttpClient) {
-              return 403;
+        return 403;
       }
+
+      ## Sinbin bots
+      if ($remote_addr = 47.241.67.94) {
+        return 403;
+      }
+      if ($remote_addr = 47.241.190.233) {
+        return 403;
+      }
+      if ($remote_addr = 47.241.215.19) {
+        return 403;
+      }
+      if ($remote_addr = 161.117.255.249) {
+        return 403;
+      }
+      if ($remote_addr = 47.241.186.7) {
+        return 403;
+      }
+      if ($remote_addr = 47.241.65.172) {
+        return 403;
+      }
+      if ($remote_addr = 47.241.175.11) {
+        return 403;
+      }
+      if ($remote_addr = 161.117.234.246) {
+        return 403;
+      }
+      if ($remote_addr = 47.241.245.146) {
+        return 403;
+      }
+
 spec:
   tls:
   - hosts:
