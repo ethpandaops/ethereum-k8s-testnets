@@ -13,6 +13,9 @@ customMarkdown: |-
   **⚠️ Important:** If you're running a node then you need to set the right TTD value.
   Read [this document](https://hackmd.io/DhdBFJLKR822lRjrrQw0lA?both) to learn how to do that.
 
+  ## Launchpad
+  https://kiln.launchpad.ethereum.org
+
   ## How to run a node
   https://notes.ethereum.org/@launchpad/kiln
 
