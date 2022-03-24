@@ -155,9 +155,10 @@ apps:
   testnet-homepage:
     <<: *common
     chart: "ethereum-helm-charts/testnet-homepage"
-    version: "0.1.0"
+    version: "0.2.0"
     valuesFiles:
       - values/ethereum/testnet-homepage.yaml
+
     setString:
       config.params.ethereum.chainName: "Kiln"
       config.params.ethereum.chainId: "$EXECUTION_CHAIN_ID"

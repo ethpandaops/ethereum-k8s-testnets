@@ -1,7 +1,15 @@
 image:
   repository: skylenet/ethereum-testnet-homepage
-  tag: latest@sha256:3045819c2b2f0ff541e9b7b0c2c681a8278c466d196fe853148728e82e3de592
+  tag: latest@sha256:7f1ec50462717ee46e60b150a51b9fa4e43e5118f4c097368067932ddb13a201
   pullPolicy: IfNotPresent
+
+config:
+  params:
+    additionalLinks:
+    - name: "Launchpad"
+      url: "https://kiln.launchpad.ethereum.org"
+    - name: "Run a node"
+      url: "https://notes.ethereum.org/@launchpad/kiln"
 
 customMarkdown: |-
   ## General information
@@ -12,12 +20,6 @@ customMarkdown: |-
 
   **⚠️ Important:** If you're running a node then you need to set the right TTD value.
   Read [this document](https://hackmd.io/DhdBFJLKR822lRjrrQw0lA?both) to learn how to do that.
-
-  ## Launchpad
-  https://kiln.launchpad.ethereum.org
-
-  ## How to run a node
-  https://notes.ethereum.org/@launchpad/kiln
 
   ## Genesis configuration
 
