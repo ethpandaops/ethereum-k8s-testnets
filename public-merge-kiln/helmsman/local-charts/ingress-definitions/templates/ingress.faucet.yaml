@@ -66,6 +66,9 @@ metadata:
       if ($remote_addr = 47.241.245.146) {
         return 403;
       }
+      if ($remote_addr = 122.199.24.196) {
+        return 403;
+      }
 
 spec:
   tls:
