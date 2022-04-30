@@ -77,6 +77,8 @@ initContainers:
 
 postgresql:
   resources:
+    limits:
+      memory: 25Gi
     requests:
       memory: 11Gi
       cpu: 1200m
