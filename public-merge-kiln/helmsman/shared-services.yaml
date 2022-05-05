@@ -10,6 +10,7 @@ helmRepos:
   ebrianne: https://ebrianne.github.io/helm-charts
   ingress-nginx: https://kubernetes.github.io/ingress-nginx
   bitnami: https://charts.bitnami.com/bitnami
+  traefik: https://helm.traefik.io/traefik
 namespaces:
   kube-system:
   shared-services:
@@ -79,3 +80,11 @@ apps:
     set:
       controller.service.annotations."external-dns\.alpha\.kubernetes\.io/hostname": >-
         ${DO_DNS_DOMAIN},*.${DO_DNS_DOMAIN}
+  # HAProxy (used entirely for severely rate limiting the faucet's /request route)
+  haproxy:
+    namespace: shared-services
+    enabled: true
+    chart: "bitnami/haproxy"
+    version: "0.3.16"
+    valuesFiles:
+      - values/shared-services/haproxy.yaml

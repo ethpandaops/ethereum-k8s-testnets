@@ -1,0 +1,33 @@
+resources:
+  requests:
+    cpu: "100m"
+    memory: "100Mi"
+
+service:
+  type: ClusterIP
+
+configuration: |
+  global
+    log stdout format raw local0
+    maxconn 1024
+  defaults
+    log global
+    timeout client 60s
+    timeout connect 60s
+    timeout server 60s
+
+    mode http
+
+  frontend entry
+    bind 0.0.0.0:8080 name http
+    log global
+
+    stick-table  type ip  size 100k  expire 24h store http_req_rate(24h)
+    http-request track-sc0 req.hdr(X-Real-IP)
+    http-request deny deny_status 429 if { sc_http_req_rate(0) gt 5 }
+
+    default_backend faucet
+
+  backend faucet
+    log global
+    server upstream_server fauceth.ethereum.svc.cluster.local:8080 maxconn 512
