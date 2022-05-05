@@ -1,0 +1,7 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: haproxy # Gross cross-namespace reference so ingress objects can route back to haproxy.
+spec:
+  type: ExternalName
+  externalName: haproxy.shared-services.svc.cluster.local

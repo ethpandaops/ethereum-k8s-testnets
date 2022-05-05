@@ -31,80 +31,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/preserve-trailing-slash: "true"
-    nginx.ingress.kubernetes.io/limit-rpm: "1"
-    nginx.ingress.kubernetes.io/limit-burst-multiplier: "2"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      if ($http_user_agent ~* PCRT00|BBBike|wget|Apache-HttpClient) {
-        return 403;
-      }
 
-      ## Sinbin bots
-      if ($remote_addr = 47.241.67.94) {
-        return 403;
-      }
-      if ($remote_addr = 47.241.190.233) {
-        return 403;
-      }
-      if ($remote_addr = 47.241.215.19) {
-        return 403;
-      }
-      if ($remote_addr = 161.117.255.249) {
-        return 403;
-      }
-      if ($remote_addr = 47.241.186.7) {
-        return 403;
-      }
-      if ($remote_addr = 47.241.65.172) {
-        return 403;
-      }
-      if ($remote_addr = 47.241.175.11) {
-        return 403;
-      }
-      if ($remote_addr = 161.117.234.246) {
-        return 403;
-      }
-      if ($remote_addr = 47.241.245.146) {
-        return 403;
-      }
-      if ($remote_addr = 122.199.24.196) {
-        return 403;
-      }
-      if ($remote_addr = 71.19.148.96) {
-        return 403;
-      }
-      if ($remote_addr = 43.132.191.98) {
-        return 403;
-      }
-      if ($remote_addr = 133.130.117.96) {
-        return 403;
-      }
-      if ($remote_addr = 106.211.136.100) {
-        return 403;
-      }
-      if ($remote_addr = 198.2.197.175) {
-        return 403;
-      }
-      if ($remote_addr = 43.135.78.27) {
-        return 403;
-      }
-      if ($remote_addr = 47.75.104.36) {
-        return 403;
-      }
-      if ($remote_addr = 112.10.255.136) {
-        return 403;
-      }
-      if ($remote_addr = 223.104.240.216) {
-        return 403;
-      }
-      if ($remote_addr = 223.104.240.215) {
-        return 403;
-      }
-      if ($remote_addr = 39.148.238.90) {
-        return 403;
-      }
-      if ($remote_addr = 220.134.169.24) {
-        return 403;
-      }
 spec:
   tls:
   - hosts:
@@ -117,6 +44,6 @@ spec:
         pathType: Exact
         backend:
           service:
-            name: fauceth
+            name: haproxy
             port:
-              number: 8080
+              number: 80
