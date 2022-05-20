@@ -22,9 +22,9 @@ configuration: |
     bind 0.0.0.0:8080 name http
     log global
 
-    stick-table  type ip  size 100k  expire 24h store http_req_rate(24h)
+    stick-table  type ip  size 1000k  expire 168h store http_req_rate(168h)
     http-request track-sc0 req.hdr(X-Real-IP)
-    http-request deny deny_status 429 if { sc_http_req_rate(0) gt 5 }
+    http-request deny deny_status 429 if { sc_http_req_rate(0) gt 3 }
 
     default_backend faucet
 
