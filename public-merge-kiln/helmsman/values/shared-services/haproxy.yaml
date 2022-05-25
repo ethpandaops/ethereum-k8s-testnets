@@ -6,6 +6,27 @@ resources:
 service:
   type: ClusterIP
 
+extraVolumes:
+- name: data
+  emptyDir: {}
+
+extraVolumeMounts:
+- name: data
+  mountPath: /data
+  readOnly: false
+
+initContainers:
+- name: download-bans
+  image: curlimages/curl
+  args:
+    - -v
+    - -o
+    - /data/bans.txt
+    - https://raw.githubusercontent.com/X4BNet/lists_vpn/main/ipv4.txt
+  volumeMounts:
+  - name: data
+    mountPath: /data
+
 configuration: |
   global
     log stdout format raw local0
@@ -16,15 +37,23 @@ configuration: |
     timeout connect 60s
     timeout server 60s
 
+    option forwardfor
+
     mode http
 
   frontend entry
     bind 0.0.0.0:8080 name http
     log global
 
-    stick-table  type ip  size 1000k  expire 168h store http_req_rate(168h)
+    http-request set-src hdr(X-Real-IP)
+
+    acl is_banned src -f /data/bans.txt
+    http-request deny deny_status 403 if is_banned
+
+    stick-table type ip size 5000k  expire 168h store http_req_rate(168h)
     http-request track-sc0 req.hdr(X-Real-IP)
-    http-request deny deny_status 429 if { sc_http_req_rate(0) gt 3 }
+    http-request deny deny_status 429 if { sc_http_req_rate(0) gt 2 }
+
 
     default_backend faucet
 
