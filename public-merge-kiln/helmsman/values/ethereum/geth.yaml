@@ -21,6 +21,7 @@ extraArgs:
 - --authrpc.host=0.0.0.0
 - --authrpc.vhosts=*
 - --override.terminaltotaldifficulty=20000000000000
+- --txpool.nolocals
 #- --verbosity=5
 
 extraContainerPorts:
