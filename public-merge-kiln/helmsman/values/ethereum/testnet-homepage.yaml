@@ -14,12 +14,9 @@ config:
 customMarkdown: |-
   ## General information
 
-  ~~TTD: 1000000000000~~
+  **⚠️ Deprecation notice:** The [Kiln testnet will be shut down](https://blog.ethereum.org/2022/06/21/testnet-deprecation/) shortly after the Ethereum mainnet’s transition to proof-of-stake, expected in the second half of 2022.
 
-  New TTD: `20000000000000`
-
-  **⚠️ Important:** If you're running a node then you need to set the right TTD value.
-  Read [this document](https://hackmd.io/DhdBFJLKR822lRjrrQw0lA?both) to learn how to do that.
+  TTD: `20000000000000`
 
   ## Genesis configuration
 
