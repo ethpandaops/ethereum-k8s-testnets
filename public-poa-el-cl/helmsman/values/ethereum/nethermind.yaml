@@ -1,0 +1,64 @@
+image:
+  repository: nethermind/nethermind
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicas: 1
+
+p2pNodePort:
+  enabled: true
+
+podManagementPolicy: Parallel
+
+extraArgs:
+- --Discovery.Bootnodes="$(cat /data/bootnodes.txt)"
+- --config=mainnet
+- --Init.ChainSpecPath=/data/chainspec.json
+- --Init.GenesisHash=""
+- --Init.IsMining=false
+- --Sync.FastSync=false
+- --EthStats.Enabled=true
+- --EthStats.Name=$(hostname)
+- --EthStats.Secret=PrivateNetwork
+- --EthStats.Server=ws://ethstats:3000/api/
+#- --log=TRACE
+
+
+initContainers:
+- name: init-chainspec
+  image: alpine:latest
+  imagePullPolicy: IfNotPresent
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+  command:
+    - sh
+    - -ace
+    - >
+      if ! [ -f /data/chainspec.json ];
+      then
+        echo "waiting for genesis provider";
+        while ! wget -T 5 -c http://genesis-generator:8000/el/; do sleep 10; done;
+        wget -O /data/chainspec.json http://genesis-generator:8000/el/chainspec.json;
+        echo "chainspec init done";
+      else
+        echo "chainspec is already there";
+      fi;
+      echo "waiting for bootnode to be available";
+      while ! wget -O /data/bootnodes.txt http://geth-bootnode-0:8888/enode;
+      do
+        sleep 10;
+      done;
+      echo "bootnode init done: $(cat /data/bootnodes.txt)";
+  volumeMounts:
+    - name: storage
+      mountPath: "/data"
+
+#persistence:
+#  enabled: true
+#  size: 2Gi
+
+resources: {}
+
+serviceMonitor:
+  enabled: true

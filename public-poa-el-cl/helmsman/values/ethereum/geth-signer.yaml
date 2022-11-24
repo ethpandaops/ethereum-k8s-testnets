@@ -1,0 +1,113 @@
+image:
+  repository: ethereum/client-go
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicas: 1
+
+p2pNodePort:
+  enabled: true
+
+podManagementPolicy: Parallel
+
+extraArgs:
+- --bootnodes="$(cat /data/bootnode.txt)"
+- --networkid=$(cat /data/chainid.txt)
+- --ethstats=$(hostname):PrivateNetwork@ethstats:3000
+- --unlock=0x$(sed -E 's/.*"address":"?([^,"]*)"?.*/\1/' /data/keystore/signer.json)
+- --password=/data/keystore/signer.password
+- --allow-insecure-unlock
+- --mine
+- --verbosity=5
+
+initContainers:
+# Important: Keep the init-keystore container as the first element of the list
+#            due to the usage of -set initContainers[0].env[0].value=...
+- name: init-keystore
+  image: bash:latest
+  imagePullPolicy: IfNotPresent
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+  command:
+    - bash
+    - -ac
+    - >
+      mkdir -p /data/keystore;
+      echo "Adding key for node";
+      echo '' > /data/keystore/signer.password;
+      key="SIGNER_KEY";
+      echo ${!key} > /data/keystore/signer.json
+  env:
+    # Important: Keep the "SIGNER_KEY" as the first env var.
+    #            due to the usage of -set initContainers[0].env[0].value=...
+    - name: SIGNER_KEY
+      value: ""
+  volumeMounts:
+    - name: storage
+      mountPath: "/data"
+
+- name: init-genesis
+  image: ethereum/client-go:latest
+  imagePullPolicy: IfNotPresent
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+  command:
+    - sh
+    - -ace
+    - >
+      if ! [ -f /data/genesis_init_done ];
+      then
+        echo "waiting for genesis provider";
+        while ! wget -T 5 -c http://genesis-generator:8000/el/; do sleep 10; done;
+        wget -O /data/genesis.json http://genesis-generator:8000/el/geth.json;
+        apk update && apk add jq;
+        cat /data/genesis.json | jq -r '.config.chainId' > /data/chainid.txt;
+        geth init --datadir /data /data/genesis.json;
+        touch /data/genesis_init_done;
+        echo "genesis init done";
+      else
+        echo "genesis is already initialized";
+      fi;
+      echo "waiting for bootnode to be available";
+      while ! wget -O /data/bootnode.txt http://geth-bootnode-0:8888/enode;
+      do
+        sleep 10;
+      done;
+      echo "bootnode init done: $(cat /data/bootnode.txt)";
+  volumeMounts:
+    - name: storage
+      mountPath: "/data"
+
+extraContainers:
+  - name: enode-http
+    image: msoap/shell2http:1.13
+    imagePullPolicy: IfNotPresent
+    securityContext:
+      runAsNonRoot: false
+      runAsUser: 0
+    command:
+    - sh
+    - -ace
+    - >
+      apk update && apk add jq -y;
+      exec /app/shell2http -port 8888 /enode
+      "echo '{\"jsonrpc\":\"2.0\",\"method\":\"admin_nodeInfo\",\"params\":[],\"id\":1}' | nc local:/data/geth.ipc | jq -r '.result.enode'"
+    volumeMounts:
+      - name: storage
+        mountPath: "/data"
+        readOnly: true
+    ports:
+      - name: enode-http
+        containerPort: 8888
+        protocol: TCP
+
+persistence:
+  enabled: true
+  size: 5Gi
+
+resources: {}
+
+serviceMonitor:
+  enabled: true

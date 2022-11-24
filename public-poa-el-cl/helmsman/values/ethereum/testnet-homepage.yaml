@@ -1,0 +1,25 @@
+image:
+  repository: skylenet/ethereum-testnet-homepage
+  tag: latest@sha256:74aea7876c25beab8719a8f27bc0edbfab9f80ddc2e128cf9eb763b4490fda4f
+  pullPolicy: IfNotPresent
+
+customMarkdown: |-
+  ## Genesis configuration
+
+  ### Execution layer clients
+
+  ```sh
+  https://config.testnet0.themerge.dev/el/genesis/geth.json
+  https://config.testnet0.themerge.dev/el/genesis/chainspec.json
+  https://config.testnet0.themerge.dev/el/bootnodes
+  ```
+
+  ### Consensus layer clients
+
+  ```
+  https://config.testnet0.themerge.dev/cl/bootnodes
+  https://config.testnet0.themerge.dev/cl/genesis/config.yaml
+  https://config.testnet0.themerge.dev/cl/genesis/genesis.ssz
+  https://config.testnet0.themerge.dev/cl/genesis/deploy_block.txt
+  https://config.testnet0.themerge.dev/cl/genesis/deposit_contract.txt
+  ```

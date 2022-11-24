@@ -1,0 +1,94 @@
+image:
+  repository: ethereum/client-go
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicas: 1
+
+p2pNodePort:
+  enabled: true
+
+extraArgs:
+- --bootnodes=""
+- --networkid=$(cat /data/chainid.txt)
+- --ethstats=$(hostname):PrivateNetwork@ethstats:3000
+- --maxpeers 500
+- --verbosity=5
+
+extraPorts:
+  - port: 8888
+    targetPort: enode-http
+    protocol: TCP
+    name: enode-http
+
+initContainers:
+- name: init-genesis
+  image: ethereum/client-go:latest
+  imagePullPolicy: IfNotPresent
+  securityContext:
+    runAsNonRoot: false
+    runAsUser: 0
+  command:
+    - sh
+    - -ace
+    - >
+      if ! [ -f /data/genesis_init_done ];
+      then
+        echo "waiting for genesis provider";
+        while ! wget -T 5 -c http://genesis-generator:8000/el/; do sleep 10; done;
+        wget -O /data/genesis.json http://genesis-generator:8000/el/geth.json;
+        apk update && apk add jq;
+        cat /data/genesis.json | jq -r '.config.chainId' > /data/chainid.txt;
+        geth init --datadir /data /data/genesis.json;
+        touch /data/genesis_init_done;
+        echo "genesis init done";
+      else
+        echo "genesis is already initialized";
+      fi
+  volumeMounts:
+    - name: storage
+      mountPath: "/data"
+
+extraContainers:
+  - name: enode-http
+    image: msoap/shell2http:1.13
+    imagePullPolicy: IfNotPresent
+    securityContext:
+      runAsNonRoot: false
+      runAsUser: 0
+    command:
+    - sh
+    - -ace
+    - >
+      apk update && apk add jq -y;
+      exec /app/shell2http -port 8888 /enode
+      "echo '{\"jsonrpc\":\"2.0\",\"method\":\"admin_nodeInfo\",\"params\":[],\"id\":1}' | nc local:/data/geth.ipc | jq -r '.result.enode'"
+    volumeMounts:
+      - name: storage
+        mountPath: "/data"
+        readOnly: true
+    ports:
+      - name: enode-http
+        containerPort: 8888
+        protocol: TCP
+    livenessProbe:
+      httpGet:
+        port: 8888
+        path: /enode
+      initialDelaySeconds: 5
+      periodSeconds: 120
+    readinessProbe:
+      httpGet:
+        port: 8888
+        path: /enode
+      initialDelaySeconds: 5
+      periodSeconds: 10
+
+persistence:
+  enabled: true
+  size: 5Gi
+
+resources: {}
+
+serviceMonitor:
+  enabled: true
